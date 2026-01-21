@@ -51,7 +51,6 @@ export function ConnectSection() {
               className={cn(
                 "inline-flex items-center gap-2 text-muted-foreground transition-colors duration-300 ease-out hover:text-foreground"
               )}
-              style={{ fontSize: 24, fontWeight: 400, letterSpacing: '-0.02em' }}
             >
               {copiedEmail ? "Copied!" : link.label}
               <span>↗</span>
@@ -62,7 +61,6 @@ export function ConnectSection() {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-muted-foreground transition-colors duration-300 ease-out hover:text-foreground"
-              style={{ fontSize: 24, fontWeight: 400, letterSpacing: '-0.02em' }}
             >
               {link.label}
               <span>↗</span>

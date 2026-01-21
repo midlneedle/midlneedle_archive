@@ -1,44 +1,60 @@
-"use client";
+"use client"
 
-import { useId } from "react";
-import { cn } from "@/lib/utils";
-import { useMedia } from "./media-context";
+import { useId } from "react"
+import { cn } from "@/lib/utils"
+import { useMedia } from "./media-context"
+import { MorphingMedia } from "./morphing-media"
 
 interface CaseItem {
-  src: string;
-  title: string;
+  src: string
+  title: string
 }
 
 interface CasesGridProps {
-  cases: CaseItem[];
+  cases: CaseItem[]
 }
 
 function CaseCard({ caseItem }: { caseItem: CaseItem }) {
-  const id = useId();
-  const { hoveredId, expandedId, setHoveredId, setExpandedId } = useMedia();
-  
-  const isHovered = hoveredId === id;
-  const isExpanded = expandedId === id;
+  const id = useId()
+  const { hoveredId, expandedId, setHoveredId, setExpandedId } = useMedia()
 
-  const handleClick = () => {
-    if (isExpanded) {
-      setExpandedId(null);
-    } else {
-      setExpandedId(id);
-    }
-  };
+  const isHovered = hoveredId === id
+  const isExpanded = expandedId === id
+  const layoutId = `case-${id}`
+
+  const handleOpen = () => {
+    setHoveredId(null)
+    setExpandedId(id)
+  }
+  const handleClose = () => {
+    setHoveredId(null)
+    setExpandedId(null)
+  }
 
   return (
     <>
-      {/* Expanded view */}
-      {isExpanded && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-8 cursor-zoom-out"
-          onClick={() => setExpandedId(null)}
+      <div
+        className="relative"
+        onMouseEnter={() => !expandedId && setHoveredId(id)}
+        onMouseLeave={() => !expandedId && setHoveredId(null)}
+      >
+        <MorphingMedia
+          layoutId={layoutId}
+          isOpen={isExpanded}
+          onOpen={handleOpen}
+          onClose={handleClose}
+          triggerClassName={cn(
+            "aspect-video cursor-zoom-in border border-black/20",
+            isHovered && !expandedId && "z-40"
+          )}
+          expandedClassName="w-[80vw] max-w-6xl aspect-video"
         >
-          <div 
-            className="relative overflow-hidden bg-card border border-black/10 w-[80vw] max-w-6xl aspect-video cursor-default"
-            onClick={(e) => e.stopPropagation()}
+          <div
+            className={cn(
+              "relative h-full w-full transition-transform duration-300 ease-out transform-gpu",
+              isHovered && !expandedId && "scale-[1.01]",
+              hoveredId && !isHovered && !expandedId && "scale-[0.98]"
+            )}
           >
             <video
               src={caseItem.src}
@@ -46,56 +62,18 @@ function CaseCard({ caseItem }: { caseItem: CaseItem }) {
               loop
               muted
               playsInline
-              className="h-full w-full object-cover"
+              className="block h-full w-full object-cover"
             />
-            
-            {/* Title overlay inside the video */}
-            <div className="absolute inset-0 flex items-end p-6">
-              <h3 
-                className="text-white"
-                style={{ fontSize: 24, fontWeight: 440, letterSpacing: '-0.04em' }}
-              >
+            <div className="absolute inset-0 flex items-end p-6 z-10">
+              <h3 className="text-2xl font-medium tracking-tight text-white">
                 {caseItem.title}
               </h3>
             </div>
           </div>
-        </div>
-      )}
-
-      <div
-        className="relative"
-        onMouseEnter={() => !expandedId && setHoveredId(id)}
-        onMouseLeave={() => !expandedId && setHoveredId(null)}
-        onClick={handleClick}
-      >
-        <div
-          className={cn(
-            "relative overflow-hidden bg-card border border-black/10 aspect-video transition-transform duration-300 ease-out cursor-zoom-in",
-            isHovered && !expandedId && "scale-105 z-40"
-          )}
-        >
-          <video
-            src={caseItem.src}
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="h-full w-full object-cover"
-          />
-          
-          {/* Title overlay inside the video */}
-          <div className="absolute inset-0 flex items-end p-6">
-            <h3 
-              className="text-white"
-              style={{ fontSize: 24, fontWeight: 440, letterSpacing: '-0.04em' }}
-            >
-              {caseItem.title}
-            </h3>
-          </div>
-        </div>
+        </MorphingMedia>
       </div>
     </>
-  );
+  )
 }
 
 export function CasesGrid({ cases }: CasesGridProps) {
@@ -105,5 +83,5 @@ export function CasesGrid({ cases }: CasesGridProps) {
         <CaseCard key={index} caseItem={caseItem} />
       ))}
     </div>
-  );
+  )
 }

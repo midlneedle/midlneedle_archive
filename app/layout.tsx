@@ -1,15 +1,33 @@
-import React from "react"
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import type { Metadata, Viewport } from 'next'
+import localFont from 'next/font/local'
 import { Analytics } from '@vercel/analytics/next'
+import cn from 'clsx'
 import './globals.css'
 
-const _inter = Inter({ subsets: ["latin"] });
+const sans = localFont({
+  src: './_fonts/InterVariable.woff2',
+  preload: true,
+  variable: '--sans',
+})
+
+const serif = localFont({
+  src: './_fonts/LoraItalicVariable.woff2',
+  preload: true,
+  variable: '--serif',
+})
+
+const mono = localFont({
+  src: './_fonts/IosevkaFixedCurly-ExtendedMedium.woff2',
+  preload: true,
+  variable: '--mono',
+})
 
 export const metadata: Metadata = {
-  title: 'Vladislav Ivanov — Product Designer',
+  title: {
+    template: '%s — Vladislav Ivanov',
+    default: 'Vladislav Ivanov — Product Designer',
+  },
   description: 'Product designer curious about technology and digital products. Prototyping in code and solving complex problems.',
-  generator: 'v0.app',
   icons: {
     icon: [
       {
@@ -29,14 +47,28 @@ export const metadata: Metadata = {
   },
 }
 
+export const viewport: Viewport = {
+  maximumScale: 1,
+  colorScheme: 'only light',
+  themeColor: '#ffffff',
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`font-sans antialiased`}>
+    <html lang="en" className="overflow-x-hidden touch-manipulation">
+      <body className={cn(
+        sans.variable,
+        serif.variable,
+        mono.variable,
+        'w-full p-6 sm:p-10 md:p-14',
+        'text-sm leading-6 sm:text-[15px] sm:leading-7 md:text-base md:leading-7',
+        'text-foreground',
+        'antialiased'
+      )}>
         {children}
         <Analytics />
       </body>

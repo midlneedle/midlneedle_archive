@@ -1,0 +1,8 @@
+{
+  "skills": {
+    "dev": {
+      "description": "Запускает dev-сервер и открывает сайт в браузере",
+      "path": ".claude/skills/dev.md"
+    }
+  }
+}
