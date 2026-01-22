@@ -44,14 +44,14 @@ function CaseCard({ caseItem }: { caseItem: CaseItem }) {
           onOpen={handleOpen}
           onClose={handleClose}
           triggerClassName={cn(
-            "aspect-video cursor-zoom-in border border-black/20",
+            "aspect-video cursor-zoom-in",
             isHovered && !expandedId && "z-40"
           )}
           expandedClassName="w-[80vw] max-w-6xl aspect-video"
         >
           <div
             className={cn(
-              "relative h-full w-full transition-transform duration-300 ease-out transform-gpu",
+              "relative h-full w-full border border-black/20 transition-transform duration-300 ease-out transform-gpu",
               isHovered && !expandedId && "scale-[1.01]",
               hoveredId && !isHovered && !expandedId && "scale-[0.98]"
             )}

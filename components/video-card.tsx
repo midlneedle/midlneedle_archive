@@ -53,7 +53,7 @@ export function VideoCard({
           onOpen={handleOpen}
           onClose={handleClose}
           triggerClassName={cn(
-            "cursor-zoom-in mb-4 border border-black/20",
+            "cursor-zoom-in mb-4",
             orientation === "vertical" ? "aspect-[9/16]" : "aspect-video",
             isHovered && !expandedId && "z-40"
           )}
@@ -65,7 +65,7 @@ export function VideoCard({
         >
           <div
             className={cn(
-              "h-full w-full transition-transform duration-300 ease-out transform-gpu",
+              "h-full w-full border border-black/20 transition-transform duration-300 ease-out transform-gpu",
               isHovered && !expandedId && "scale-[1.01]",
               hoveredId && !isHovered && !expandedId && "scale-[0.98]"
             )}

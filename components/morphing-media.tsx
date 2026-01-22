@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react"
 import { createPortal } from "react-dom"
 import { AnimatePresence, MotionConfig, motion } from "motion/react"
 import { cn } from "@/lib/utils"
@@ -27,19 +27,57 @@ export function MorphingMedia({
   const [mounted, setMounted] = useState(false)
   const triggerRef = useRef<HTMLDivElement | null>(null)
   const modalRef = useRef<HTMLDivElement | null>(null)
+  const scrollLockStyles = useRef<{
+    bodyPaddingRight: string
+    bodyOverflow: string
+    bodyOverscroll: string
+    htmlOverflow: string
+    htmlOverscroll: string
+  } | null>(null)
   useEffect(() => {
     setMounted(true)
     return () => setMounted(false)
   }, [])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    const body = document.body
+    const root = document.documentElement
+    const restoreScrollLock = () => {
+      if (!scrollLockStyles.current) return
+      const saved = scrollLockStyles.current
+      body.style.paddingRight = saved.bodyPaddingRight
+      body.style.overflow = saved.bodyOverflow
+      body.style.overscrollBehavior = saved.bodyOverscroll
+      root.style.overflow = saved.htmlOverflow
+      root.style.overscrollBehavior = saved.htmlOverscroll
+      scrollLockStyles.current = null
+    }
+
     if (isOpen) {
-      document.body.classList.add("overflow-hidden")
+      if (!scrollLockStyles.current) {
+        scrollLockStyles.current = {
+          bodyPaddingRight: body.style.paddingRight,
+          bodyOverflow: body.style.overflow,
+          bodyOverscroll: body.style.overscrollBehavior,
+          htmlOverflow: root.style.overflow,
+          htmlOverscroll: root.style.overscrollBehavior,
+        }
+      }
+      const scrollbarWidth = Math.max(0, window.innerWidth - root.clientWidth)
+      if (scrollbarWidth > 0) {
+        const computedBodyPadding =
+          Number.parseFloat(window.getComputedStyle(body).paddingRight) || 0
+        body.style.paddingRight = `${computedBodyPadding + scrollbarWidth}px`
+      }
+      body.style.overflow = "hidden"
+      body.style.overscrollBehavior = "none"
+      root.style.overflow = "hidden"
+      root.style.overscrollBehavior = "none"
     } else {
-      document.body.classList.remove("overflow-hidden")
+      restoreScrollLock()
     }
     return () => {
-      document.body.classList.remove("overflow-hidden")
+      restoreScrollLock()
     }
   }, [isOpen])
 
