@@ -24,11 +24,6 @@ const monochromeTheme = {
   fontSizes: {
     root: "12px",
   },
-  shadows: {
-    xs: "none",
-    sm: "none",
-    lg: "none",
-  },
 } as const
 
 const defaults = {
