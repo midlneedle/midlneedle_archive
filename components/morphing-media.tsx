@@ -95,6 +95,7 @@ export function MorphingMedia({
   const playAll = useCallback((root: HTMLElement | null) => {
     if (!root) return
     root.querySelectorAll("video").forEach((video) => {
+      if (video.dataset.autoplay === "false") return
       const maybePromise = video.play()
       if (maybePromise && typeof maybePromise.catch === "function") {
         maybePromise.catch(() => {})

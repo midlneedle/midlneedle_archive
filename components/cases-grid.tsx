@@ -4,6 +4,7 @@ import { useId } from "react"
 import { cn } from "@/lib/utils"
 import { useMedia } from "./media-context"
 import { MorphingMedia } from "./morphing-media"
+import { useVideoAutoplay } from "@/hooks/use-video-autoplay"
 
 interface CaseItem {
   src: string
@@ -14,12 +15,13 @@ interface CasesGridProps {
   cases: CaseItem[]
 }
 
-function CaseCard({ caseItem }: { caseItem: CaseItem }) {
+function CaseCard({ caseItem, allowAutoplay }: { caseItem: CaseItem; allowAutoplay: boolean }) {
   const id = useId()
   const { hoveredId, expandedId, setHoveredId, setExpandedId } = useMedia()
 
   const isHovered = hoveredId === id
   const isExpanded = expandedId === id
+  const shouldAutoplay = allowAutoplay || isExpanded
   const layoutId = `case-${id}`
 
   const handleOpen = () => {
@@ -59,12 +61,38 @@ function CaseCard({ caseItem }: { caseItem: CaseItem }) {
           >
             <video
               src={caseItem.src}
-              autoPlay
-              loop
+              data-autoplay={shouldAutoplay ? "true" : "false"}
+              autoPlay={shouldAutoplay}
+              loop={shouldAutoplay}
               muted
               playsInline
+              preload={shouldAutoplay ? "auto" : "metadata"}
+              onLoadedData={(event) => {
+                if (shouldAutoplay) return
+                const video = event.currentTarget
+                if (video.currentTime === 0) {
+                  try {
+                    video.currentTime = 0.0001
+                  } catch {
+                    // Ignore seek errors; the browser will show the first frame if possible.
+                  }
+                }
+              }}
               className="absolute inset-0 h-full w-full object-cover transform-gpu scale-[1.01]"
             />
+            {!shouldAutoplay && (
+              <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/85 text-black shadow-sm backdrop-blur-sm">
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    className="h-6 w-6 translate-x-[1px] fill-current"
+                  >
+                    <path d="M8 5.5v13l11-6.5-11-6.5z" />
+                  </svg>
+                </div>
+              </div>
+            )}
             <div className="absolute inset-0 flex items-end px-[var(--space-case-title-x)] py-[var(--space-case-title-y)] z-10">
               <h3 className="type-title m-0 text-white">
                 {caseItem.title}
@@ -78,10 +106,12 @@ function CaseCard({ caseItem }: { caseItem: CaseItem }) {
 }
 
 export function CasesGrid({ cases }: CasesGridProps) {
+  const allowAutoplay = useVideoAutoplay()
+
   return (
     <div className="flex flex-col gap-[var(--space-cases-gap)]">
       {cases.map((caseItem, index) => (
-        <CaseCard key={index} caseItem={caseItem} />
+        <CaseCard key={index} caseItem={caseItem} allowAutoplay={allowAutoplay} />
       ))}
     </div>
   )

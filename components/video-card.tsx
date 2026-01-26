@@ -4,6 +4,7 @@ import { useId } from "react"
 import { cn } from "@/lib/utils"
 import { useMedia } from "./media-context"
 import { MorphingMedia } from "./morphing-media"
+import { useVideoAutoplay } from "@/hooks/use-video-autoplay"
 
 interface VideoCardProps {
   src: string
@@ -26,9 +27,11 @@ export function VideoCard({
 }: VideoCardProps) {
   const id = useId()
   const { hoveredId, expandedId, setHoveredId, setExpandedId } = useMedia()
+  const allowAutoplay = useVideoAutoplay()
 
   const isHovered = hoveredId === id
   const isExpanded = expandedId === id
+  const shouldAutoplay = allowAutoplay || isExpanded
   const layoutId = `media-${id}`
 
   const handleOpen = () => {
@@ -74,12 +77,38 @@ export function VideoCard({
           >
             <video
               src={src}
-              autoPlay
-              loop
+              data-autoplay={shouldAutoplay ? "true" : "false"}
+              autoPlay={shouldAutoplay}
+              loop={shouldAutoplay}
               muted
               playsInline
+              preload={shouldAutoplay ? "auto" : "metadata"}
+              onLoadedData={(event) => {
+                if (shouldAutoplay) return
+                const video = event.currentTarget
+                if (video.currentTime === 0) {
+                  try {
+                    video.currentTime = 0.0001
+                  } catch {
+                    // Ignore seek errors; the browser will show the first frame if possible.
+                  }
+                }
+              }}
               className="absolute inset-0 h-full w-full object-cover transform-gpu scale-[1.01]"
             />
+            {!shouldAutoplay && (
+              <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/85 text-black shadow-sm backdrop-blur-sm">
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    className="h-6 w-6 translate-x-[1px] fill-current"
+                  >
+                    <path d="M8 5.5v13l11-6.5-11-6.5z" />
+                  </svg>
+                </div>
+              </div>
+            )}
           </div>
         </MorphingMedia>
         <div>
