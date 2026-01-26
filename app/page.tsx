@@ -24,13 +24,13 @@ export default function Home() {
           {/* Hero Section */}
           <section className="mb-[var(--space-section)]">
             <div className="group">
-              <h1 className="type-title inline-flex items-center gap-0 text-foreground">
+              <h1 className="type-title mb-[var(--space-hero-text)] inline-flex items-center gap-0 text-foreground">
                 <span>Vladislav Ivanov</span>
                 <span className="pointer-events-none ml-0 translate-x-0 opacity-0 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-x-[0.2em]">
                   <img src={icons.vladislav} alt="" className="h-[1em] w-[1em]" />
                 </span>
               </h1>
-              <p className="type-body text-muted-foreground">
+              <p className="type-body mt-0 text-muted-foreground">
                 I'm a product designer curious about technology and digital products.
                 {'\n'}I prototype in code and enjoy solving complex problems that bring value to users and businesses.
               </p>
@@ -42,77 +42,56 @@ export default function Home() {
             <SectionHeader title="Playground" iconSrc={icons.playground} />
 
             {/* Stack 1: 3 vertical videos */}
-            <div className="mb-[var(--space-stack)] grid grid-cols-1 gap-[var(--space-grid-x)] sm:grid-cols-2 md:grid-cols-3">
+            <div className="mb-[var(--space-stack)] grid grid-cols-1 gap-[var(--space-grid)] sm:grid-cols-2">
               <VideoCard
                 src={videos.cummera}
                 title="Interactive List"
                 description="Gesture-driven list interactions in SwiftUI"
                 orientation="vertical"
-                showTitle={false}
+                showTitle={true}
               />
               <VideoCard
                 src={videos.winxp}
                 title="Haptic Feedback"
                 description="Custom haptic patterns for UI feedback"
                 orientation="vertical"
-                showTitle={false}
-              />
-              <VideoCard
-                src={videos.cummera}
-                title="Scroll Animation"
-                description="Parallax scrolling effects"
-                orientation="vertical"
-                showTitle={false}
+                showTitle={true}
               />
             </div>
 
             {/* Stack 2: 3 vertical videos */}
-            <div className="mb-[var(--space-stack)] grid grid-cols-1 gap-[var(--space-grid-x)] sm:grid-cols-2 md:grid-cols-3">
+            <div className="mb-[var(--space-stack)] grid grid-cols-1 gap-[var(--space-grid)] sm:grid-cols-2">
               <VideoCard
                 src={videos.winxp}
                 title="Tab Bar Transition"
                 description="Fluid navigation transitions between views"
                 orientation="vertical"
-                showTitle={false}
+                showTitle={true}
               />
               <VideoCard
                 src={videos.cummera}
                 title="Card Stack"
                 description="Stackable card interface pattern"
                 orientation="vertical"
-                showTitle={false}
-              />
-              <VideoCard
-                src={videos.winxp}
-                title="Animation Library"
-                description="Reusable animation components"
-                orientation="vertical"
-                showTitle={false}
+                showTitle={true}
               />
             </div>
 
             {/* Stack 3: 3 vertical videos */}
-            <div className="mb-[var(--space-stack)] grid grid-cols-1 gap-[var(--space-grid-x)] sm:grid-cols-2 md:grid-cols-3">
+            <div className="mb-[var(--space-stack)] grid grid-cols-1 gap-[var(--space-grid)] sm:grid-cols-2">
               <VideoCard
                 src={videos.cummera}
                 title="Gesture Recognition"
                 description="Advanced touch gesture handling"
                 orientation="vertical"
-                showTitle={false}
+                showTitle={true}
               />
               <VideoCard
                 src={videos.winxp}
                 title="State Management"
                 description="Complex state transitions"
                 orientation="vertical"
-                showTitle={false}
-              />
-              <VideoCard
-                src={videos.cummera}
-                title="Performance Tuning"
-                description="Optimized rendering techniques"
-                orientation="vertical"
-                showTitle={false}
+                showTitle={true}
               />
             </div>
 
@@ -123,7 +102,7 @@ export default function Home() {
                 title="Full Design System"
                 description="Complete component library and design system implementation"
                 orientation="horizontal"
-                showTitle={false}
+                showTitle={true}
               />
             </div>
           </section>

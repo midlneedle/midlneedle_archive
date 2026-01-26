@@ -81,16 +81,13 @@
   --space-page-y: 128px;
   --space-section: 64px;
   --space-stack: 32px;
-  --space-grid-x: 16px;
-  --space-cases-gap: 16px;
-  --space-title-text: 16px;
-  --space-heading-top: 0px;
-  --space-heading-bottom: 24px;
-  --space-card-media: 8px;
-  --space-card-text: 0px;
-  --space-case-title-x: 16px;
-  --space-case-title-y: 16px;
-  --space-connect-gap: 8px;
+  --space-grid: 16px;
+  --space-inset: 15px;
+  --space-text: 22px;
+  --radius-card: 8px;
+  --space-hero-text: 18px;
+  --space-card-text: 4px;
+  --space-connect-gap: 12px;
 
   /* Typography settings */
   --sans-variation: 'opsz' 32;
@@ -351,13 +348,12 @@ article {
   /* Typography */
   h1 {
     @apply font-semibold;
-    margin-bottom: var(--space-title-text);
+    margin: 0;
     text-wrap: balance;
   }
 
   h2, h3 {
-    margin-top: var(--space-heading-top);
-    margin-bottom: var(--space-heading-bottom);
+    margin: 0;
     text-wrap: balance;
     font-size: inherit;
     line-height: inherit;
@@ -365,12 +361,12 @@ article {
   }
 
   p {
-    margin-top: var(--space-title-text);
+    margin: 0;
     text-wrap: pretty;
   }
 
   ul, ol {
-    margin-top: var(--space-title-text);
+    margin: 0;
     @apply list-outside pl-5;
   }
 
