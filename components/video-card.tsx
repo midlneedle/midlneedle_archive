@@ -45,7 +45,7 @@ export function VideoCard({
       <div
         className={cn(
           "relative flex flex-col transition-transform duration-300 ease-out transform-gpu origin-center",
-          isHovered && !expandedId && "scale-[1.04]",
+          isHovered && !expandedId && "scale-[1.02]",
           isHovered && !expandedId && "z-40",
           className
         )}
@@ -58,7 +58,7 @@ export function VideoCard({
           onOpen={handleOpen}
           onClose={handleClose}
           triggerClassName={cn(
-            "cursor-zoom-in mb-[var(--space-card-media)]",
+            "cursor-zoom-in mb-[var(--space-inset)]",
             orientation === "vertical" ? "aspect-[9/16]" : "aspect-video"
           )}
           expandedClassName={cn(
@@ -69,7 +69,7 @@ export function VideoCard({
         >
           <div
             className={cn(
-              "relative h-full w-full overflow-hidden border border-border bg-black"
+              "relative h-full w-full overflow-hidden rounded-[var(--radius-card)] border border-border bg-black"
             )}
           >
             <video
@@ -84,7 +84,7 @@ export function VideoCard({
         </MorphingMedia>
         <div>
           {showTitle && (
-            <h3 className="text-foreground">
+            <h3 className="type-body mb-0 text-foreground">
               {title}
             </h3>
           )}

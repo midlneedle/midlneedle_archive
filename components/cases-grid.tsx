@@ -36,7 +36,7 @@ function CaseCard({ caseItem }: { caseItem: CaseItem }) {
       <div
         className={cn(
           "relative transition-transform duration-300 ease-out transform-gpu origin-center",
-          isHovered && !expandedId && "scale-[1.04]",
+          isHovered && !expandedId && "scale-[1.02]",
           isHovered && !expandedId && "z-40"
         )}
         onMouseEnter={() => !expandedId && setHoveredId(id)}
@@ -54,7 +54,7 @@ function CaseCard({ caseItem }: { caseItem: CaseItem }) {
         >
           <div
             className={cn(
-              "relative h-full w-full overflow-hidden border border-border bg-black"
+              "relative h-full w-full overflow-hidden rounded-[var(--radius-card)] border border-border bg-black"
             )}
           >
             <video
@@ -65,7 +65,7 @@ function CaseCard({ caseItem }: { caseItem: CaseItem }) {
               playsInline
               className="absolute inset-0 h-full w-full object-cover transform-gpu scale-[1.01]"
             />
-            <div className="absolute inset-0 flex items-end px-[var(--space-case-title-x)] py-[var(--space-case-title-y)] z-10">
+            <div className="absolute inset-0 z-10 flex items-end p-[var(--space-inset)]">
               <h3 className="type-title m-0 text-white">
                 {caseItem.title}
               </h3>
@@ -79,7 +79,7 @@ function CaseCard({ caseItem }: { caseItem: CaseItem }) {
 
 export function CasesGrid({ cases }: CasesGridProps) {
   return (
-    <div className="flex flex-col gap-[var(--space-cases-gap)]">
+    <div className="flex flex-col gap-[var(--space-stack)]">
       {cases.map((caseItem, index) => (
         <CaseCard key={index} caseItem={caseItem} />
       ))}

@@ -36,16 +36,12 @@ const defaults = {
   pageY: 128,
   section: 64,
   stack: 32,
-  gridX: 16,
-  casesGap: 16,
-  titleText: 16,
-  headingTop: 0,
-  headingBottom: 24,
-  cardMedia: 8,
-  cardText: 0,
-  caseTitleX: 16,
-  caseTitleY: 16,
-  connectGap: 8,
+  grid: 16,
+  inset: 15,
+  text: 22,
+  heroText: 18,
+  cardText: 4,
+  connectGap: 12,
   foreground: "#353b42",
   mutedForeground: "#5d6268",
   background: "#ffffff",
@@ -90,15 +86,11 @@ function buildSpecs(values: typeof defaults) {
     `--space-page-y: ${values.pageY}px`,
     `--space-section: ${values.section}px`,
     `--space-stack: ${values.stack}px`,
-    `--space-grid-x: ${values.gridX}px`,
-    `--space-cases-gap: ${values.casesGap}px`,
-    `--space-title-text: ${values.titleText}px`,
-    `--space-heading-top: ${values.headingTop}px`,
-    `--space-heading-bottom: ${values.headingBottom}px`,
-    `--space-card-media: ${values.cardMedia}px`,
+    `--space-grid: ${values.grid}px`,
+    `--space-inset: ${values.inset}px`,
+    `--space-text: ${values.text}px`,
+    `--space-hero-text: ${values.heroText}px`,
     `--space-card-text: ${values.cardText}px`,
-    `--space-case-title-x: ${values.caseTitleX}px`,
-    `--space-case-title-y: ${values.caseTitleY}px`,
     `--space-connect-gap: ${values.connectGap}px`,
     `--foreground: ${values.foreground}`,
     `--muted-foreground: ${values.mutedForeground}`,
@@ -165,20 +157,16 @@ export function SpacingControls() {
   const [values, setValues] = useControls(
     () => ({
       Spacing: folder({
-        pageX: { value: defaults.pageX, min: 0, max: 200, step: 1, label: "Page padding X" },
-        pageY: { value: defaults.pageY, min: 0, max: 200, step: 1, label: "Page padding Y" },
-        section: { value: defaults.section, min: 0, max: 240, step: 1, label: "Section spacing" },
-        stack: { value: defaults.stack, min: 0, max: 200, step: 1, label: "Stack spacing" },
-        gridX: { value: defaults.gridX, min: 0, max: 120, step: 1, label: "Grid gap X" },
-        casesGap: { value: defaults.casesGap, min: 0, max: 200, step: 1, label: "Cases gap" },
-        titleText: { value: defaults.titleText, min: 0, max: 120, step: 1, label: "Title to text" },
-        headingTop: { value: defaults.headingTop, min: 0, max: 200, step: 1, label: "Heading top" },
-        headingBottom: { value: defaults.headingBottom, min: 0, max: 200, step: 1, label: "Heading bottom" },
-        cardMedia: { value: defaults.cardMedia, min: 0, max: 120, step: 1, label: "Card media" },
-        cardText: { value: defaults.cardText, min: 0, max: 120, step: 1, label: "Card text" },
-        caseTitleX: { value: defaults.caseTitleX, min: 0, max: 120, step: 1, label: "Case title pad X" },
-        caseTitleY: { value: defaults.caseTitleY, min: 0, max: 120, step: 1, label: "Case title pad Y" },
-        connectGap: { value: defaults.connectGap, min: 0, max: 80, step: 1, label: "Connect gap" },
+        pageX: { value: defaults.pageX, min: 0, max: 200, step: 1, label: "Page X" },
+        pageY: { value: defaults.pageY, min: 0, max: 200, step: 1, label: "Page Y" },
+        section: { value: defaults.section, min: 0, max: 240, step: 1, label: "Section" },
+        stack: { value: defaults.stack, min: 0, max: 200, step: 1, label: "Stack" },
+        grid: { value: defaults.grid, min: 0, max: 120, step: 1, label: "Grid" },
+        inset: { value: defaults.inset, min: 0, max: 120, step: 1, label: "Inset" },
+        text: { value: defaults.text, min: 0, max: 120, step: 1, label: "Text" },
+        heroText: { value: defaults.heroText, min: 0, max: 120, step: 1, label: "Hero gap" },
+        cardText: { value: defaults.cardText, min: 0, max: 120, step: 1, label: "Card gap" },
+        connectGap: { value: defaults.connectGap, min: 0, max: 120, step: 1, label: "Connect" },
         copySpecs: button(() => copyToClipboard(buildSpecs(valuesRef.current))),
       }),
       Colors: folder({
@@ -309,15 +297,11 @@ export function SpacingControls() {
     root.style.setProperty("--space-page-y", `${values.pageY}px`)
     root.style.setProperty("--space-section", `${values.section}px`)
     root.style.setProperty("--space-stack", `${values.stack}px`)
-    root.style.setProperty("--space-grid-x", `${values.gridX}px`)
-    root.style.setProperty("--space-cases-gap", `${values.casesGap}px`)
-    root.style.setProperty("--space-title-text", `${values.titleText}px`)
-    root.style.setProperty("--space-heading-top", `${values.headingTop}px`)
-    root.style.setProperty("--space-heading-bottom", `${values.headingBottom}px`)
-    root.style.setProperty("--space-card-media", `${values.cardMedia}px`)
+    root.style.setProperty("--space-grid", `${values.grid}px`)
+    root.style.setProperty("--space-inset", `${values.inset}px`)
+    root.style.setProperty("--space-text", `${values.text}px`)
+    root.style.setProperty("--space-hero-text", `${values.heroText}px`)
     root.style.setProperty("--space-card-text", `${values.cardText}px`)
-    root.style.setProperty("--space-case-title-x", `${values.caseTitleX}px`)
-    root.style.setProperty("--space-case-title-y", `${values.caseTitleY}px`)
     root.style.setProperty("--space-connect-gap", `${values.connectGap}px`)
     root.style.setProperty("--foreground", values.foreground)
     root.style.setProperty("--muted-foreground", values.mutedForeground)
