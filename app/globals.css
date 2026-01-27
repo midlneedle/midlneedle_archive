@@ -519,6 +519,15 @@ article {
     word-spacing: -0.04em;
   }
 
+  .type-card-title {
+    font-size: 1.1em;
+    line-height: 1.5em;
+    font-weight: 480;
+    font-variation-settings: 'wght' 480, var(--sans-variation);
+    letter-spacing: 0em;
+    word-spacing: -0.04em;
+  }
+
   /* Focus states */
   :focus-visible {
     outline: 2px solid var(--border);

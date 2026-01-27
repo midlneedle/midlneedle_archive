@@ -73,11 +73,18 @@ const defaults = {
   bodyTextWeight: 440,
   bodyTextLetterSpacing: 0.01,
   bodyTextWordSpacing: -0.04,
+  cardTitleEnabled: true,
+  cardTitleSize: 1.1,
+  cardTitleLineHeight: 1.5,
+  cardTitleWeight: 480,
+  cardTitleLetterSpacing: 0,
+  cardTitleWordSpacing: -0.04,
 }
 
 const typeConfigs = [
   { key: "title", selector: ".type-title" },
   { key: "bodyText", selector: ".type-body" },
+  { key: "cardTitle", selector: ".type-card-title" },
 ] as const
 
 function buildSpecs(values: typeof defaults) {
@@ -131,6 +138,14 @@ function buildTypeSpecs(values: typeof defaults) {
       weight: values.bodyTextWeight,
       letterSpacingEm: values.bodyTextLetterSpacing,
       wordSpacingEm: values.bodyTextWordSpacing,
+    },
+    cardTitle: {
+      enabled: values.cardTitleEnabled,
+      sizeEm: values.cardTitleSize,
+      lineHeightEm: values.cardTitleLineHeight,
+      weight: values.cardTitleWeight,
+      letterSpacingEm: values.cardTitleLetterSpacing,
+      wordSpacingEm: values.cardTitleWordSpacing,
     },
   }
   return JSON.stringify(payload, null, 2)
@@ -225,7 +240,17 @@ export function SpacingControls() {
           bodyTextLetterSpacing: { value: defaults.bodyTextLetterSpacing, min: -0.2, max: 0.2, step: 0.001, label: "Letter spacing (em)" },
           bodyTextWordSpacing: { value: defaults.bodyTextWordSpacing, min: -0.3, max: 0.3, step: 0.001, label: "Word spacing (em)" },
         }),
-        copyTypography: button(() => copyToClipboard(buildTypeSpecs(valuesRef.current))),
+        "Card titles": folder({
+          cardTitleEnabled: { value: defaults.cardTitleEnabled, label: "Enable overrides" },
+          cardTitleSize: { value: defaults.cardTitleSize, min: 0.6, max: 2.4, step: 0.01, label: "Size (em)" },
+          cardTitleLineHeight: { value: defaults.cardTitleLineHeight, min: 0, max: 3, step: 0.01, label: "Line height (em, 0 = auto)" },
+          cardTitleWeight: { value: defaults.cardTitleWeight, min: 300, max: 800, step: 10, label: "Weight" },
+          cardTitleLetterSpacing: { value: defaults.cardTitleLetterSpacing, min: -0.2, max: 0.2, step: 0.001, label: "Letter spacing (em)" },
+          cardTitleWordSpacing: { value: defaults.cardTitleWordSpacing, min: -0.3, max: 0.3, step: 0.001, label: "Word spacing (em)" },
+        }),
+        Actions: folder({
+          copyTypography: button(() => copyToClipboard(buildTypeSpecs(valuesRef.current))),
+        }),
       }),
     }),
     { collapsed: false }
