@@ -403,14 +403,14 @@ export function SpacingControls() {
       el.style.removeProperty("letter-spacing")
       el.style.removeProperty("word-spacing")
     }
-    const getValue = (name: string) => (values as Record<string, number | boolean | string>)[name]
     typeConfigs.forEach(({ key, selector }) => {
-      const enabled = Boolean(getValue(`${key}Enabled`))
-      const size = Number(getValue(`${key}Size`))
-      const lineHeight = Number(getValue(`${key}LineHeight`))
-      const weight = Number(getValue(`${key}Weight`))
-      const letterSpacing = Number(getValue(`${key}LetterSpacing`))
-      const wordSpacing = Number(getValue(`${key}WordSpacing`))
+      const getRaw = (name: string) => (values as Record<string, unknown>)[name]
+      const enabled = Boolean(getRaw(`${key}Enabled`))
+      const size = Number(getRaw(`${key}Size`))
+      const lineHeight = Number(getRaw(`${key}LineHeight`))
+      const weight = Number(getRaw(`${key}Weight`))
+      const letterSpacing = Number(getRaw(`${key}LetterSpacing`))
+      const wordSpacing = Number(getRaw(`${key}WordSpacing`))
       document.querySelectorAll<HTMLElement>(selector).forEach((el) => {
         if (!enabled) {
           clearInlineSize(el)
