@@ -314,7 +314,10 @@ export function SpacingControls() {
       }
       const updates: Record<string, number> = {}
       typeConfigs.forEach(({ key, selector }) => {
-        const el = document.querySelector<HTMLElement>(selector)
+        const candidates = Array.from(
+          document.querySelectorAll<HTMLElement>(selector)
+        ).filter((el) => !el.closest("[data-disable-type-controls]"))
+        const el = candidates[0]
         if (!el) return
         const computed = window.getComputedStyle(el)
         const parent = el.parentElement
@@ -435,6 +438,7 @@ export function SpacingControls() {
       const letterSpacing = Number(getRaw(`${key}LetterSpacing`))
       const wordSpacing = Number(getRaw(`${key}WordSpacing`))
       document.querySelectorAll<HTMLElement>(selector).forEach((el) => {
+        if (el.closest("[data-disable-type-controls]")) return
         if (!enabled) {
           clearInlineSize(el)
           clearInlineWeight(el)

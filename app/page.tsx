@@ -124,9 +124,9 @@ export default function Home() {
 
             <CasesGrid
               cases={[
-                { src: videos.cummera, title: "Finance App Redesign" },
-                { src: videos.winxp, title: "E-commerce Checkout" },
-                { src: videos.cummera, title: "Health Tracking Dashboard" },
+                { title: "Finance App Redesign" },
+                { title: "Watchface for Pebble", href: "/cases/watchface" },
+                { title: "Health Tracking Dashboard" },
               ]}
             />
           </section>

@@ -306,6 +306,17 @@ article {
   color: #485a74;
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--space-page-y);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 /* ========================================
    View Transitions
    ======================================== */
@@ -532,7 +543,7 @@ article {
     height: calc(var(--px) * 10);
     margin-left: 0.2em;
     vertical-align: baseline;
-    transform: translateY(0.02em);
+    transform: translateY(0em);
     image-rendering: pixelated;
     pointer-events: none;
   }
