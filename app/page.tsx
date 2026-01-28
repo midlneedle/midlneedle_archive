@@ -26,9 +26,7 @@ export default function Home() {
             <div className="group">
               <h1 className="type-title mb-[var(--space-hero-text)] inline-flex items-center gap-0 text-foreground">
                 <span>Vladislav Ivanov</span>
-                <span className="pointer-events-none ml-0 translate-x-0 opacity-0 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-x-[0.2em]">
-                  <img src={icons.vladislav} alt="" className="h-[1em] w-[1em]" />
-                </span>
+                <span aria-hidden="true" className="title-pixel title-pixel--question" />
               </h1>
               <p className="type-body mt-0 text-muted-foreground">
                 I'm a product designer curious about technology and digital products.
@@ -39,7 +37,7 @@ export default function Home() {
 
           {/* Playground Section */}
           <section className="mb-[var(--space-section)] group">
-            <SectionHeader title="Playground" iconSrc={icons.playground} />
+            <SectionHeader title="Playground" pixelVariant="playground" />
 
             <div className="flex flex-col gap-[var(--space-grid)] sm:gap-0">
               {/* Stack 1: 2 vertical videos */}
@@ -122,7 +120,7 @@ export default function Home() {
 
           {/* Cases Section */}
           <section className="mb-[var(--space-section)] group">
-            <SectionHeader title="Cases" iconSrc={icons.cases} />
+            <SectionHeader title="Cases" pixelVariant="cases" />
 
             <CasesGrid
               cases={[
@@ -135,7 +133,7 @@ export default function Home() {
 
           {/* Connect Section */}
           <section className="group">
-            <SectionHeader title="Connect" iconSrc={icons.connect} />
+            <SectionHeader title="Connect" pixelVariant="connect" />
             <ConnectSection />
           </section>
         </div>
