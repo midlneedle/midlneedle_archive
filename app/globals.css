@@ -1047,8 +1047,8 @@ html {
   .type-title {
     font-size: 1.2em;
     line-height: normal;
-    font-weight: 500;
-    font-variation-settings: 'wght' 500, var(--sans-variation);
+    font-weight: 482;
+    font-variation-settings: 'wght' 482, var(--sans-variation);
     letter-spacing: 0em;
     word-spacing: -0.04em;
   }
@@ -1065,29 +1065,29 @@ html {
 
   .type-body {
     font-size: 1.1em;
-    line-height: 1.5em;
-    font-weight: 440;
-    font-variation-settings: 'wght' 440, var(--sans-variation);
+    line-height: 1.48em;
+    font-weight: 422;
+    font-variation-settings: 'wght' 422, var(--sans-variation);
     letter-spacing: 0.01em;
-    word-spacing: -0.04em;
+    word-spacing: 0em;
   }
 
   .type-card-title {
     font-size: 1.1em;
-    line-height: 1.5em;
-    font-weight: 480;
-    font-variation-settings: 'wght' 480, var(--sans-variation);
+    line-height: 1.48em;
+    font-weight: 482;
+    font-variation-settings: 'wght' 482, var(--sans-variation);
     letter-spacing: 0em;
-    word-spacing: -0.04em;
+    word-spacing: 0em;
   }
 
   .type-card-caption {
     font-size: 1em;
-    line-height: 1.5em;
-    font-weight: 440;
-    font-variation-settings: 'wght' 440, var(--sans-variation);
-    letter-spacing: 0.01em;
-    word-spacing: -0.04em;
+    line-height: 1.48em;
+    font-weight: 422;
+    font-variation-settings: 'wght' 422, var(--sans-variation);
+    letter-spacing: 0em;
+    word-spacing: 0em;
   }
 
   /* Focus states */

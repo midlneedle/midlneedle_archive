@@ -60,29 +60,23 @@
   display: inline;
   font-size: inherit;
   line-height: inherit;
-  color: var(--muted-foreground);
-}
-
-.footnoteRef a {
-  display: inline;
   font-weight: inherit;
-  line-height: inherit;
-  color: inherit;
+  color: var(--muted-foreground);
   text-decoration: none;
   transition: color 0.2s ease;
   scroll-margin-top: calc(50vh - 1em);
 }
 
-.footnoteRef a::before {
-  content: "\00a0[";
-}
-
-.footnoteRef a::after {
-  content: "]";
-}
-
-.footnoteRef a:hover {
+.footnoteRef:hover {
   color: var(--foreground);
+}
+
+.footnoteNumber::before {
+  content: "[";
+}
+
+.footnoteNumber::after {
+  content: "]";
 }
 
 .footnotes {
@@ -95,7 +89,7 @@
   position: relative;
   list-style: none;
   padding-left: 0;
-  margin: 0 0 0 12px;
+  margin: 0;
   display: flex;
   flex-direction: column;
   gap: calc(var(--space-text) * 0.45);
@@ -104,21 +98,23 @@
 
 .footnoteItem {
   position: relative;
-  margin-left: 12px;
+  margin-left: 10px;
   color: var(--muted-foreground);
   font-size: 0.78em;
   line-height: 1.5;
   letter-spacing: 0.01em;
   counter-increment: list;
+  text-align: left;
 }
 
 .footnoteItem::before {
   position: absolute;
-  left: -12px;
-  top: -0.1em;
-  font-size: 0.7em;
-  font-variation-settings: 'wght' 520, var(--sans-variation);
-  content: counter(list);
+  left: -10px;
+  top: 0;
+  content: counter(list) ".";
+  font-size: inherit;
+  line-height: inherit;
+  font-variation-settings: inherit;
 }
 
 .footnoteBackref {

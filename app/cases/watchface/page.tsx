@@ -105,23 +105,39 @@ function renderInline(text: string, footnoteCounter: { current: number }) {
   const segments = text.split(/(\\\*)/)
   const nodes: React.ReactNode[] = []
 
-  for (const segment of segments) {
+  for (let i = 0; i < segments.length; i++) {
+    const segment = segments[i]
+
     if (segment === "\\*") {
       footnoteCounter.current += 1
+
+      // Захватываем предыдущий текстовый узел и извлекаем последнее слово/фразу
+      let precedingText = ""
+      if (nodes.length > 0) {
+        const lastNode = nodes[nodes.length - 1]
+        if (typeof lastNode === "string") {
+          const match = lastNode.match(/(\S+(?:\s+\S+)?)$/)
+          if (match) {
+            precedingText = match[1]
+            nodes[nodes.length - 1] = lastNode.slice(0, -precedingText.length)
+          }
+        }
+      }
+
       nodes.push(
-        <span
+        <a
           key={`fn-${footnoteCounter.current}-${nodes.length}`}
+          id={`fnref-${footnoteCounter.current}`}
+          href={`#fn-${footnoteCounter.current}`}
+          data-footnote-ref
+          aria-label={`Сноска ${footnoteCounter.current}`}
           className={styles.footnoteRef}
         >
-          <a
-            id={`fnref-${footnoteCounter.current}`}
-            href={`#fn-${footnoteCounter.current}`}
-            data-footnote-ref
-            aria-label={`Сноска ${footnoteCounter.current}`}
-          >
+          {precedingText}
+          <span className={styles.footnoteNumber}>
             {footnoteCounter.current}
-          </a>
-        </span>
+          </span>
+        </a>
       )
       continue
     }
@@ -208,7 +224,7 @@ export default async function WatchfaceCasePage() {
               return (
                 <p
                   key={`p-${index}`}
-                  className={`type-body text-muted-foreground ${styles.paragraph}`}
+                  className={`type-body text-foreground ${styles.paragraph}`}
                 >
                   {renderInline(block.text, footnoteCounter)}
                 </p>
