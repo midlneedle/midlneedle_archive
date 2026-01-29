@@ -71,20 +71,26 @@ const defaults = {
   bodyTextSize: 1.1,
   bodyTextLineHeight: 1.48,
   bodyTextWeight: 422,
-  bodyTextLetterSpacing: 0.01,
+  bodyTextLetterSpacing: 0,
   bodyTextWordSpacing: 0,
   cardTitleEnabled: true,
   cardTitleSize: 1.1,
   cardTitleLineHeight: 1.48,
   cardTitleWeight: 482,
   cardTitleLetterSpacing: 0,
-  cardTitleWordSpacing: 0,
+  cardTitleWordSpacing: -0.04,
   cardCaptionEnabled: true,
   cardCaptionSize: 1.0,
   cardCaptionLineHeight: 1.48,
   cardCaptionWeight: 422,
   cardCaptionLetterSpacing: 0,
   cardCaptionWordSpacing: 0,
+  articleEnabled: true,
+  articleSize: 1,
+  articleLineHeight: 1.48,
+  articleWeight: 422,
+  articleLetterSpacing: 0,
+  articleWordSpacing: 0,
 }
 
 const typeConfigs = [
@@ -92,6 +98,7 @@ const typeConfigs = [
   { key: "bodyText", selector: ".type-body" },
   { key: "cardTitle", selector: ".type-card-title" },
   { key: "cardCaption", selector: ".type-card-caption" },
+  { key: "article", selector: ".type-article" },
 ] as const
 
 function buildSpecs(values: typeof defaults) {
@@ -161,6 +168,14 @@ function buildTypeSpecs(values: typeof defaults) {
       weight: values.cardCaptionWeight,
       letterSpacingEm: values.cardCaptionLetterSpacing,
       wordSpacingEm: values.cardCaptionWordSpacing,
+    },
+    article: {
+      enabled: values.articleEnabled,
+      sizeEm: values.articleSize,
+      lineHeightEm: values.articleLineHeight,
+      weight: values.articleWeight,
+      letterSpacingEm: values.articleLetterSpacing,
+      wordSpacingEm: values.articleWordSpacing,
     },
   }
   return JSON.stringify(payload, null, 2)
@@ -270,6 +285,14 @@ export function SpacingControls() {
           cardCaptionWeight: { value: defaults.cardCaptionWeight, min: 300, max: 800, step: 10, label: "Weight" },
           cardCaptionLetterSpacing: { value: defaults.cardCaptionLetterSpacing, min: -0.2, max: 0.2, step: 0.001, label: "Letter spacing (em)" },
           cardCaptionWordSpacing: { value: defaults.cardCaptionWordSpacing, min: -0.3, max: 0.3, step: 0.001, label: "Word spacing (em)" },
+        }),
+        "Article text": folder({
+          articleEnabled: { value: defaults.articleEnabled, label: "Enable overrides" },
+          articleSize: { value: defaults.articleSize, min: 0.6, max: 2.4, step: 0.01, label: "Size (em)" },
+          articleLineHeight: { value: defaults.articleLineHeight, min: 0, max: 3, step: 0.01, label: "Line height (em, 0 = auto)" },
+          articleWeight: { value: defaults.articleWeight, min: 300, max: 800, step: 1, label: "Weight" },
+          articleLetterSpacing: { value: defaults.articleLetterSpacing, min: -0.2, max: 0.2, step: 0.001, label: "Letter spacing (em)" },
+          articleWordSpacing: { value: defaults.articleWordSpacing, min: -0.3, max: 0.3, step: 0.001, label: "Word spacing (em)" },
         }),
         Actions: folder({
           copyTypography: button(() => copyToClipboard(buildTypeSpecs(valuesRef.current))),

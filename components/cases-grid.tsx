@@ -1,5 +1,7 @@
 "use client"
 
+import { Link } from 'next-view-transitions'
+
 interface CaseItem {
   title: string
   href?: string
@@ -19,9 +21,9 @@ function CaseCard({ title, href }: CaseItem) {
   return (
     <div className="aspect-video w-full overflow-hidden rounded-[var(--radius-card)] border border-border bg-card transition-transform duration-300 ease-out transform-gpu hover:scale-[1.02]">
       {href ? (
-        <a href={href} className="block h-full w-full">
+        <Link href={href} className="block h-full w-full">
           {content}
-        </a>
+        </Link>
       ) : (
         content
       )}

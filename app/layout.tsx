@@ -6,6 +6,8 @@ import { withBasePath } from '@/lib/base-path'
 import './globals.css'
 import { SpacingControls } from '@/components/spacing-controls'
 import { ScrollGradientOverlay } from '@/components/scroll-gradient-overlay'
+import { ScrollManager } from '@/components/scroll-manager'
+import { ViewTransitions } from 'next-view-transitions'
 
 export const dynamic = 'error'
 
@@ -69,20 +71,23 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="overflow-x-hidden touch-manipulation">
-      <body className={cn(
-        sans.variable,
-        serif.variable,
-        mono.variable,
-        'w-full px-[var(--space-page-x)] py-[var(--space-page-y)]',
-        'text-foreground',
-        'antialiased'
-      )}>
-        <ScrollGradientOverlay />
-        {children}
-        <SpacingControls />
-        <Analytics />
-      </body>
-    </html>
+    <ViewTransitions>
+      <html lang="en" className="overflow-x-hidden touch-manipulation">
+        <body className={cn(
+          sans.variable,
+          serif.variable,
+          mono.variable,
+          'w-full px-[var(--space-page-x)] py-[var(--space-page-y)]',
+          'text-foreground',
+          'antialiased'
+        )}>
+          <ScrollManager />
+          <ScrollGradientOverlay />
+          {children}
+          <SpacingControls />
+          <Analytics />
+        </body>
+      </html>
+    </ViewTransitions>
   )
 }

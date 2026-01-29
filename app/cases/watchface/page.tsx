@@ -68,14 +68,6 @@ function parseArticle(raw: string) {
           aspect: "aspect-video",
         })
       }
-
-      if (block.text.includes("Настройки")) {
-        withMedia.push({
-          type: "media",
-          label: "Фото · Экран настроек",
-          aspect: "aspect-[16/10]",
-        })
-      }
     }
 
     if (block.type === "paragraph") {
@@ -87,6 +79,13 @@ function parseArticle(raw: string) {
         })
       }
 
+      if (block.text.includes("я постарался привести все к более привычному современному пользователю интерфейсу")) {
+        withMedia.push({
+          type: "media",
+          label: "Фото · Экран настроек",
+          aspect: "aspect-[16/10]",
+        })
+      }
     }
 
     if (block.type === "heading" && block.text === "Детали") {
@@ -224,7 +223,7 @@ export default async function WatchfaceCasePage() {
               return (
                 <p
                   key={`p-${index}`}
-                  className={`type-body text-foreground ${styles.paragraph}`}
+                  className={`type-article text-foreground ${styles.paragraph}`}
                 >
                   {renderInline(block.text, footnoteCounter)}
                 </p>
