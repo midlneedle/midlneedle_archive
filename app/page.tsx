@@ -24,9 +24,8 @@ export default function Home() {
           {/* Hero Section */}
           <section className="mb-[var(--space-section)]">
             <div className="group">
-              <h1 className="type-title mb-[var(--space-hero-text)] inline-flex items-center gap-0 text-foreground">
-                <span>Vladislav Ivanov</span>
-                <span aria-hidden="true" className="title-pixel title-pixel--question" />
+              <h1 className="type-title mb-[var(--space-hero-text)] text-foreground">
+                Vladislav Ivanov
               </h1>
               <p className="type-body mt-0 text-muted-foreground">
                 I'm a product designer curious about technology and digital products.

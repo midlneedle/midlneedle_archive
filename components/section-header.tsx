@@ -12,7 +12,7 @@ export function SectionHeader({
   pixelVariant,
 }: SectionHeaderProps) {
   return (
-    <h2 className="type-title mb-[var(--space-text)] inline-flex items-center gap-0 text-foreground">
+    <h2 className="section-header type-title mb-[var(--space-text)] inline-flex items-center gap-0 text-foreground">
       <span>{title}</span>
       {pixelVariant ? (
         <span
