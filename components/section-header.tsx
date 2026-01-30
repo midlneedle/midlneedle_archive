@@ -1,3 +1,5 @@
+import { InteractivePixel } from "./interactive-pixel"
+
 interface SectionHeaderProps {
   title: string
   iconSrc?: string
@@ -15,10 +17,7 @@ export function SectionHeader({
     <h2 className="section-header type-title mb-[var(--space-text)] inline-flex items-center gap-0 text-foreground">
       <span>{title}</span>
       {pixelVariant ? (
-        <span
-          aria-hidden="true"
-          className={`title-pixel title-pixel--${pixelVariant}`}
-        />
+        <InteractivePixel variant={pixelVariant} />
       ) : null}
       {iconSrc ? (
         <span className="pointer-events-none ml-0 translate-x-0 opacity-0 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-x-[0.2em]">
