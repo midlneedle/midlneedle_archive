@@ -45,22 +45,9 @@ const defaults = {
   foreground: "#353b42",
   mutedForeground: "#5d6268",
   background: "#ffffff",
-  border: "#5d6268",
+  border: "#D7D8D9",
   card: "#ffffff",
-  cardForeground: "#353b42",
-  popover: "#ffffff",
-  popoverForeground: "#353b42",
-  primary: "#353b42",
-  primaryForeground: "#ffffff",
-  secondary: "#f5f5f5",
-  secondaryForeground: "#353b42",
-  muted: "#f5f5f5",
-  accent: "#f5f5f5",
-  accentForeground: "#353b42",
-  destructive: "oklch(0.577 0.245 27.325)",
-  destructiveForeground: "oklch(0.577 0.245 27.325)",
-  input: "#f5f5f5",
-  ring: "#e0e0e0",
+  stroke: "rgb(53 59 66 / 0.4)",
   titleEnabled: true,
   titleSize: 1.2,
   titleLineHeight: 1.44,
@@ -121,20 +108,7 @@ function buildSpecs(values: typeof defaults) {
     `--background: ${values.background}`,
     `--border: ${values.border}`,
     `--card: ${values.card}`,
-    `--card-foreground: ${values.cardForeground}`,
-    `--popover: ${values.popover}`,
-    `--popover-foreground: ${values.popoverForeground}`,
-    `--primary: ${values.primary}`,
-    `--primary-foreground: ${values.primaryForeground}`,
-    `--secondary: ${values.secondary}`,
-    `--secondary-foreground: ${values.secondaryForeground}`,
-    `--muted: ${values.muted}`,
-    `--accent: ${values.accent}`,
-    `--accent-foreground: ${values.accentForeground}`,
-    `--destructive: ${values.destructive}`,
-    `--destructive-foreground: ${values.destructiveForeground}`,
-    `--input: ${values.input}`,
-    `--ring: ${values.ring}`,
+    `--inner-stroke: ${values.stroke}`,
   ].join("\n")
 }
 
@@ -235,35 +209,12 @@ export function SpacingControls() {
         copySpecs: button(() => copyToClipboard(buildSpecs(valuesRef.current))),
       }),
       Colors: folder({
-        Typography: folder({
-          foreground: { value: defaults.foreground, label: "Foreground" },
-          mutedForeground: { value: defaults.mutedForeground, label: "Muted foreground" },
-        }),
-        Surfaces: folder({
-          background: { value: defaults.background, label: "Background" },
-          card: { value: defaults.card, label: "Card" },
-          popover: { value: defaults.popover, label: "Popover" },
-          secondary: { value: defaults.secondary, label: "Secondary" },
-          muted: { value: defaults.muted, label: "Muted" },
-          accent: { value: defaults.accent, label: "Accent" },
-        }),
-        Accents: folder({
-          primary: { value: defaults.primary, label: "Primary" },
-          primaryForeground: { value: defaults.primaryForeground, label: "Primary foreground" },
-          secondaryForeground: { value: defaults.secondaryForeground, label: "Secondary foreground" },
-          accentForeground: { value: defaults.accentForeground, label: "Accent foreground" },
-          cardForeground: { value: defaults.cardForeground, label: "Card foreground" },
-          popoverForeground: { value: defaults.popoverForeground, label: "Popover foreground" },
-        }),
-        Lines: folder({
-          border: { value: defaults.border, label: "Border" },
-          input: { value: defaults.input, label: "Input" },
-          ring: { value: defaults.ring, label: "Ring" },
-        }),
-        Status: folder({
-          destructive: { value: defaults.destructive, label: "Destructive" },
-          destructiveForeground: { value: defaults.destructiveForeground, label: "Destructive foreground" },
-        }),
+        foreground: { value: defaults.foreground, label: "Foreground (text)" },
+        mutedForeground: { value: defaults.mutedForeground, label: "Muted foreground" },
+        background: { value: defaults.background, label: "Background" },
+        border: { value: defaults.border, label: "Border" },
+        card: { value: defaults.card, label: "Card" },
+        stroke: { value: defaults.stroke, label: "Stroke (with opacity)" },
       }),
       Typography: folder({
         Titles: folder({
@@ -432,20 +383,7 @@ export function SpacingControls() {
     root.style.setProperty("--background", values.background)
     root.style.setProperty("--border", values.border)
     root.style.setProperty("--card", values.card)
-    root.style.setProperty("--card-foreground", values.cardForeground)
-    root.style.setProperty("--popover", values.popover)
-    root.style.setProperty("--popover-foreground", values.popoverForeground)
-    root.style.setProperty("--primary", values.primary)
-    root.style.setProperty("--primary-foreground", values.primaryForeground)
-    root.style.setProperty("--secondary", values.secondary)
-    root.style.setProperty("--secondary-foreground", values.secondaryForeground)
-    root.style.setProperty("--muted", values.muted)
-    root.style.setProperty("--accent", values.accent)
-    root.style.setProperty("--accent-foreground", values.accentForeground)
-    root.style.setProperty("--destructive", values.destructive)
-    root.style.setProperty("--destructive-foreground", values.destructiveForeground)
-    root.style.setProperty("--input", values.input)
-    root.style.setProperty("--ring", values.ring)
+    root.style.setProperty("--inner-stroke", values.stroke)
     const setInlineSize = (el: HTMLElement, size: number, lineHeight: number) => {
       if (Number.isNaN(size) || size === 0) {
         el.style.removeProperty("font-size")

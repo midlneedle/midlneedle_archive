@@ -4,6 +4,7 @@
 
 .meta {
   margin-top: calc(var(--space-text) * -0.2);
+  color: var(--inner-stroke);
 }
 .sectionTitle {
   margin-top: var(--article-paragraph-gap);
@@ -61,7 +62,7 @@
   font-size: inherit;
   line-height: inherit;
   font-weight: inherit;
-  color: var(--muted-foreground);
+  color: var(--inner-stroke);
   text-decoration: none;
   transition: color 0.2s ease;
   scroll-margin-top: calc(50vh - 1em);

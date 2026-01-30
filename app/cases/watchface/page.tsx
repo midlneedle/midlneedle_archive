@@ -123,6 +123,11 @@ function renderInline(text: string, footnoteCounter: { current: number }) {
         }
       }
 
+      if (precedingText) {
+        nodes.push(precedingText)
+        nodes.push(" ")
+      }
+
       nodes.push(
         <a
           key={`fn-${footnoteCounter.current}-${nodes.length}`}
@@ -132,7 +137,6 @@ function renderInline(text: string, footnoteCounter: { current: number }) {
           aria-label={`Сноска ${footnoteCounter.current}`}
           className={styles.footnoteRef}
         >
-          {precedingText}{" "}
           <span className={styles.footnoteNumber}>
             {footnoteCounter.current}
           </span>
@@ -178,7 +182,7 @@ export default async function WatchfaceCasePage() {
             <h2 className="type-title text-foreground">
               {title}
             </h2>
-            <div className={`type-card-caption text-muted-foreground ${styles.meta}`}>
+            <div className={`type-card-caption ${styles.meta}`}>
               18 декабря 2025
             </div>
           </header>
