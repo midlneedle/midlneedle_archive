@@ -91,6 +91,9 @@ const defaults = {
   articleWeight: 422,
   articleLetterSpacing: 0,
   articleWordSpacing: 0,
+  articleParagraphGap: 44,
+  articleTitleGap: 18,
+  articleInnerGap: 18,
 }
 
 const typeConfigs = [
@@ -177,6 +180,15 @@ function buildTypeSpecs(values: typeof defaults) {
       letterSpacingEm: values.articleLetterSpacing,
       wordSpacingEm: values.articleWordSpacing,
     },
+  }
+  return JSON.stringify(payload, null, 2)
+}
+
+function buildArticleSpacingSpecs(values: typeof defaults) {
+  const payload = {
+    paragraphGap: values.articleParagraphGap,
+    titleGap: values.articleTitleGap,
+    innerGap: values.articleInnerGap,
   }
   return JSON.stringify(payload, null, 2)
 }
@@ -298,6 +310,30 @@ export function SpacingControls() {
           copyTypography: button(() => copyToClipboard(buildTypeSpecs(valuesRef.current))),
         }),
       }),
+      "Spacing Article": folder({
+        articleParagraphGap: {
+          value: defaults.articleParagraphGap,
+          min: 0,
+          max: 120,
+          step: 1,
+          label: "Paragraph gap (px)"
+        },
+        articleTitleGap: {
+          value: defaults.articleTitleGap,
+          min: 0,
+          max: 120,
+          step: 1,
+          label: "Title gap (px)"
+        },
+        articleInnerGap: {
+          value: defaults.articleInnerGap,
+          min: 0,
+          max: 120,
+          step: 1,
+          label: "Inner gap (px)"
+        },
+        copyArticleSpacing: button(() => copyToClipboard(buildArticleSpacingSpecs(valuesRef.current))),
+      }),
     }),
     { collapsed: false }
   )
@@ -388,6 +424,9 @@ export function SpacingControls() {
     root.style.setProperty("--space-hero-text", `${values.heroText}px`)
     root.style.setProperty("--space-card-text", `${values.cardText}px`)
     root.style.setProperty("--space-connect-gap", `${values.connectGap}px`)
+    root.style.setProperty("--article-paragraph-gap", `${values.articleParagraphGap}px`)
+    root.style.setProperty("--article-title-gap", `${values.articleTitleGap}px`)
+    root.style.setProperty("--article-inner-gap", `${values.articleInnerGap}px`)
     root.style.setProperty("--foreground", values.foreground)
     root.style.setProperty("--muted-foreground", values.mutedForeground)
     root.style.setProperty("--background", values.background)

@@ -89,6 +89,9 @@
   --space-hero-text: 18px;
   --space-card-text: 2px;
   --space-connect-gap: 12px;
+  --article-paragraph-gap: 44px;
+  --article-title-gap: 18px;
+  --article-inner-gap: 18px;
 
   /* Typography settings */
   --sans-variation: 'opsz' 32;

@@ -1,32 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { cn } from "@/lib/utils";
 
-interface SocialLink {
-  label: string;
-  href?: string;
-  copyable?: boolean;
-}
-
-const socialLinks: SocialLink[] = [
-  {
-    label: "Email",
-    copyable: true,
-  },
-  {
-    label: "Telegram",
-    href: "https://t.me/midlneedle",
-  },
-  {
-    label: "Threads",
-    href: "https://www.threads.com/@midlneedle",
-  },
-  {
-    label: "Twitter",
-    href: "https://x.com/midlneedle",
-  },
-];
+const linkStyle = "underline decoration-[var(--inner-stroke)] hover:decoration-foreground transition-colors";
 
 export function ConnectSection() {
   const [copiedEmail, setCopiedEmail] = useState(false);
@@ -36,38 +12,77 @@ export function ConnectSection() {
       await navigator.clipboard.writeText("midlneedle@gmail.com");
       setCopiedEmail(true);
       setTimeout(() => setCopiedEmail(false), 2000);
-    } catch (err) {
-      console.error("Failed to copy email:", err);
+    } catch {
+      // Fallback for older browsers or insecure contexts
+      const textarea = document.createElement("textarea");
+      textarea.value = "midlneedle@gmail.com";
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand("copy");
+        setCopiedEmail(true);
+        setTimeout(() => setCopiedEmail(false), 2000);
+      } catch (err) {
+        console.error("Failed to copy email:", err);
+      }
+      document.body.removeChild(textarea);
     }
   };
 
   return (
-    <div className="flex flex-col gap-[var(--space-connect-gap)]">
-      {socialLinks.map((link) => (
-        <div key={link.label}>
-          {link.copyable ? (
-            <button
-              onClick={handleCopyEmail}
-              className={cn(
-                "type-body inline-flex items-center gap-2 text-muted-foreground hover:text-foreground cursor-pointer"
-              )}
-            >
-              {copiedEmail ? "Copied!" : link.label}
-              <span>↗</span>
-            </button>
-          ) : (
-            <a
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="type-body inline-flex items-center gap-2 text-muted-foreground hover:text-foreground"
-            >
-              {link.label}
-              <span>↗</span>
-            </a>
-          )}
-        </div>
-      ))}
+    <div className="type-body text-foreground">
+      <p className="mb-[var(--space-connect-gap)]">
+        Reach out via{" "}
+        <a
+          href="https://t.me/midlneedle"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={linkStyle}
+        >
+          Telegram
+        </a>{" "}
+        or{" "}
+        <button
+          onClick={handleCopyEmail}
+          className={`${linkStyle} cursor-pointer`}
+          style={{
+            background: 'transparent',
+            padding: 0,
+            margin: 0,
+            border: 'none',
+            outline: 'none',
+            fontFamily: 'inherit',
+            fontSize: 'inherit',
+            fontWeight: 'inherit',
+            lineHeight: 'inherit',
+            color: 'inherit',
+          }}
+        >
+          {copiedEmail ? "Copied!" : "Email"}
+        </button>
+      </p>
+      <p>
+        You can also find me on{" "}
+        <a
+          href="https://www.threads.com/@midlneedle"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={linkStyle}
+        >
+          Threads
+        </a>{" "}
+        and{" "}
+        <a
+          href="https://x.com/midlneedle"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={linkStyle}
+        >
+          Twitter
+        </a>
+      </p>
     </div>
   );
 }

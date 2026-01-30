@@ -175,9 +175,9 @@ export default async function WatchfaceCasePage() {
       <div className="mx-auto max-w-2xl">
         <section>
           <header className="flex flex-col gap-[var(--space-text)]">
-            <h1 className={`type-title text-foreground ${styles.title}`}>
+            <h2 className="type-title text-foreground">
               {title}
-            </h1>
+            </h2>
             <div className={`type-card-caption text-muted-foreground ${styles.meta}`}>
               18 декабря 2025
             </div>
