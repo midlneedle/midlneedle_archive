@@ -124,7 +124,7 @@ export default function Home() {
             <CasesGrid
               cases={[
                 { title: "Finance App Redesign" },
-                { title: "Watchface for Pebble", href: "/cases/watchface" },
+                { title: "How I Built a Pebble Watchface That Caught the Founder's Attention", href: "/cases/watchface" },
                 { title: "Health Tracking Dashboard" },
               ]}
             />

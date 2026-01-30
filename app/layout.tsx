@@ -72,7 +72,7 @@ export default function RootLayout({
 }>) {
   return (
     <ViewTransitions>
-      <html lang="en" className="overflow-x-hidden touch-manipulation">
+      <html lang="en" className="overflow-x-hidden touch-manipulation" data-scroll-behavior="smooth">
         <body className={cn(
           sans.variable,
           serif.variable,
