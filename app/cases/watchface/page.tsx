@@ -132,7 +132,7 @@ function renderInline(text: string, footnoteCounter: { current: number }) {
           aria-label={`Сноска ${footnoteCounter.current}`}
           className={styles.footnoteRef}
         >
-          {precedingText}
+          {precedingText}{" "}
           <span className={styles.footnoteNumber}>
             {footnoteCounter.current}
           </span>
