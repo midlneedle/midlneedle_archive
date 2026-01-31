@@ -60,16 +60,6 @@ function parseArticle(raw: string) {
   for (const block of blocks) {
     withMedia.push(block)
 
-    if (block.type === "subheading") {
-      if (block.text.includes("Анимация запуска")) {
-        withMedia.push({
-          type: "media",
-          label: "Видео · Анимация запуска",
-          aspect: "aspect-video",
-        })
-      }
-    }
-
     if (block.type === "paragraph") {
       if (block.text.includes("картинка, к которой я хотел прийти")) {
         withMedia.push({
@@ -86,14 +76,22 @@ function parseArticle(raw: string) {
           aspect: "aspect-[16/10]",
         })
       }
-    }
 
-    if (block.type === "heading" && block.text === "Детали") {
-      withMedia.push({
-        type: "media",
-        label: "Фото · Общий вид вотчфейса",
-        aspect: "aspect-[3/2]",
-      })
+      if (block.text.includes("как лучше пользоваться нейронкой, чтобы ускорить перенос визуала в код")) {
+        withMedia.push({
+          type: "media",
+          label: "Фото · Общий вид вотчфейса",
+          aspect: "aspect-[3/2]",
+        })
+      }
+
+      if (block.text.includes("стоит сказать, что большая часть времени была потрачена именно в попытках оптимизировать и отполировать анимацию")) {
+        withMedia.push({
+          type: "media",
+          label: "Видео · Анимация запуска",
+          aspect: "aspect-video",
+        })
+      }
     }
   }
 

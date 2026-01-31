@@ -28,8 +28,7 @@ export default function Home() {
                 Vladislav Ivanov
               </h1>
               <p className="type-body mt-0 text-muted-foreground">
-                I'm a product designer curious about technology and digital products.
-                {'\n'}I prototype in code and enjoy solving complex problems that bring value to users and businesses.
+                I'm a product designer curious about technology and digital products. I prototype in code, enjoy solving complex problems and deeply care about craft.
               </p>
             </div>
           </section>
