@@ -8,6 +8,7 @@ import { SpacingControls } from '@/components/spacing-controls'
 import { ScrollGradientOverlay } from '@/components/scroll-gradient-overlay'
 import { ScrollManager } from '@/components/scroll-manager'
 import { ViewTransitions } from 'next-view-transitions'
+import { ViewTransitionErrorHandler } from './view-transition-error-handler'
 
 export const dynamic = 'error'
 
@@ -63,6 +64,8 @@ export const viewport: Viewport = {
   maximumScale: 1,
   colorScheme: 'only light',
   themeColor: '#ffffff',
+  // Предотвращает InvalidStateError на мобильных при изменении viewport
+  interactiveWidget: 'resizes-visual',
 }
 
 export default function RootLayout({
@@ -72,7 +75,7 @@ export default function RootLayout({
 }>) {
   return (
     <ViewTransitions>
-      <html lang="en" className="overflow-x-hidden touch-manipulation" data-scroll-behavior="smooth">
+      <html lang="en" className="overflow-x-hidden touch-manipulation">
         <body className={cn(
           sans.variable,
           serif.variable,
@@ -81,6 +84,7 @@ export default function RootLayout({
           'text-foreground',
           'antialiased'
         )}>
+          <ViewTransitionErrorHandler />
           <ScrollManager />
           <ScrollGradientOverlay />
           {children}
