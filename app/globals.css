@@ -1925,3 +1925,27 @@ html {
   background: var(--muted-foreground);
   opacity: 0.3;
 }
+
+/* ========================================
+   View Transitions (Fade In)
+   ======================================== */
+
+/* Старая страница исчезает мгновенно */
+::view-transition-old(root) {
+  animation: none;
+  opacity: 0;
+}
+
+/* Новая страница плавно появляется */
+::view-transition-new(root) {
+  animation: fade-in 0.4s ease;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
