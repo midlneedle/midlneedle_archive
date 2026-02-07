@@ -75,14 +75,14 @@ export function VideoCard({
         >
           <div
             className={cn(
-              "relative h-full w-full overflow-hidden rounded-[var(--radius-card)] border border-border bg-black"
+              "relative h-full w-full overflow-hidden rounded-[var(--radius-card)] border border-border"
             )}
+            style={{ backgroundColor: blurDataURL || "#000" }}
           >
             <OptimizedVideoPlayer
               src={src}
               shouldAutoplay={shouldAutoplay}
               className="relative h-full w-full"
-              blurDataURL={blurDataURL}
             />
             {!shouldAutoplay && (
               <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">

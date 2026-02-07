@@ -1911,11 +1911,15 @@ html {
 
 /* ========================================
    Pixel Loading Spinner
+   Same style as InteractivePixel with trail going around
    ======================================== */
 
-.pixel-loading-spinner {
-  --px: calc(0.08em * var(--spinner-size, 1));
+.pixel-loading {
+  --px: 4px;
   --pixel-dark: rgb(53 59 66 / 0.9);
+  --pixel-mid: rgb(53 59 66 / 0.6);
+  --pixel-light: rgb(53 59 66 / 0.35);
+  --pixel-faint: rgb(53 59 66 / 0.18);
   position: relative;
   display: inline-block;
   width: calc(var(--px) * 10);
@@ -1923,7 +1927,8 @@ html {
   image-rendering: pixelated;
 }
 
-.pixel-spinner-frame {
+/* Рамка — 4 угловые точки, как у InteractivePixel */
+.pixel-loading-frame {
   position: absolute;
   top: 0;
   left: 0;
@@ -1931,34 +1936,65 @@ html {
   height: var(--px);
   border-radius: 35%;
   pointer-events: none;
-  animation: pixel-spin 0.8s steps(4) infinite;
+  z-index: 2;
+  box-shadow:
+    calc(var(--px) * 1) calc(var(--px) * 1) 0 0 var(--pixel-faint),
+    calc(var(--px) * 10) calc(var(--px) * 1) 0 0 var(--pixel-faint),
+    calc(var(--px) * 1) calc(var(--px) * 10) 0 0 var(--pixel-faint),
+    calc(var(--px) * 10) calc(var(--px) * 10) 0 0 var(--pixel-faint);
 }
 
-@keyframes pixel-spin {
-  0% {
-    box-shadow:
-      calc(var(--px) * 5) calc(var(--px) * 2) 0 0 var(--pixel-dark),
-      calc(var(--px) * 6) calc(var(--px) * 2) 0 0 var(--pixel-dark);
-  }
-  25% {
-    box-shadow:
-      calc(var(--px) * 8) calc(var(--px) * 5) 0 0 var(--pixel-dark),
-      calc(var(--px) * 8) calc(var(--px) * 6) 0 0 var(--pixel-dark);
-  }
-  50% {
-    box-shadow:
-      calc(var(--px) * 5) calc(var(--px) * 9) 0 0 var(--pixel-dark),
-      calc(var(--px) * 6) calc(var(--px) * 9) 0 0 var(--pixel-dark);
-  }
-  75% {
-    box-shadow:
-      calc(var(--px) * 3) calc(var(--px) * 5) 0 0 var(--pixel-dark),
-      calc(var(--px) * 3) calc(var(--px) * 6) 0 0 var(--pixel-dark);
-  }
-  100% {
-    box-shadow:
-      calc(var(--px) * 5) calc(var(--px) * 2) 0 0 var(--pixel-dark),
-      calc(var(--px) * 6) calc(var(--px) * 2) 0 0 var(--pixel-dark);
-  }
+/* Trail — 2 пикселя идут по периметру */
+.pixel-loading-trail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--px);
+  height: var(--px);
+  border-radius: 35%;
+  pointer-events: none;
+  z-index: 1;
+  animation: pixel-trail-loop 2.4s linear infinite;
+}
+
+/*
+  Trail по периметру сетки (10x10):
+  Верх: x 3→9, y=2
+  Право: x=9, y 3→9
+  Низ: x 9→3, y=9
+  Лево: x=2, y 9→3
+  = 24 шага, каждый шаг = ~4.17%
+  Trail = текущий пиксель (dark) + 1 за ним (mid) + 2 за ним (light)
+*/
+@keyframes pixel-trail-loop {
+  /* Верх: 3,2 -> 9,2 */
+  0%    { box-shadow: calc(var(--px)*3) calc(var(--px)*2) 0 0 var(--pixel-dark), calc(var(--px)*2) calc(var(--px)*3) 0 0 var(--pixel-mid), calc(var(--px)*2) calc(var(--px)*4) 0 0 var(--pixel-light); }
+  4.17% { box-shadow: calc(var(--px)*4) calc(var(--px)*2) 0 0 var(--pixel-dark), calc(var(--px)*3) calc(var(--px)*2) 0 0 var(--pixel-mid), calc(var(--px)*2) calc(var(--px)*3) 0 0 var(--pixel-light); }
+  8.33% { box-shadow: calc(var(--px)*5) calc(var(--px)*2) 0 0 var(--pixel-dark), calc(var(--px)*4) calc(var(--px)*2) 0 0 var(--pixel-mid), calc(var(--px)*3) calc(var(--px)*2) 0 0 var(--pixel-light); }
+  12.5% { box-shadow: calc(var(--px)*6) calc(var(--px)*2) 0 0 var(--pixel-dark), calc(var(--px)*5) calc(var(--px)*2) 0 0 var(--pixel-mid), calc(var(--px)*4) calc(var(--px)*2) 0 0 var(--pixel-light); }
+  16.67%{ box-shadow: calc(var(--px)*7) calc(var(--px)*2) 0 0 var(--pixel-dark), calc(var(--px)*6) calc(var(--px)*2) 0 0 var(--pixel-mid), calc(var(--px)*5) calc(var(--px)*2) 0 0 var(--pixel-light); }
+  20.83%{ box-shadow: calc(var(--px)*8) calc(var(--px)*2) 0 0 var(--pixel-dark), calc(var(--px)*7) calc(var(--px)*2) 0 0 var(--pixel-mid), calc(var(--px)*6) calc(var(--px)*2) 0 0 var(--pixel-light); }
+  25%   { box-shadow: calc(var(--px)*9) calc(var(--px)*2) 0 0 var(--pixel-dark), calc(var(--px)*8) calc(var(--px)*2) 0 0 var(--pixel-mid), calc(var(--px)*7) calc(var(--px)*2) 0 0 var(--pixel-light); }
+  /* Право: 9,3 -> 9,9 */
+  29.17%{ box-shadow: calc(var(--px)*9) calc(var(--px)*3) 0 0 var(--pixel-dark), calc(var(--px)*9) calc(var(--px)*2) 0 0 var(--pixel-mid), calc(var(--px)*8) calc(var(--px)*2) 0 0 var(--pixel-light); }
+  33.33%{ box-shadow: calc(var(--px)*9) calc(var(--px)*4) 0 0 var(--pixel-dark), calc(var(--px)*9) calc(var(--px)*3) 0 0 var(--pixel-mid), calc(var(--px)*9) calc(var(--px)*2) 0 0 var(--pixel-light); }
+  37.5% { box-shadow: calc(var(--px)*9) calc(var(--px)*5) 0 0 var(--pixel-dark), calc(var(--px)*9) calc(var(--px)*4) 0 0 var(--pixel-mid), calc(var(--px)*9) calc(var(--px)*3) 0 0 var(--pixel-light); }
+  41.67%{ box-shadow: calc(var(--px)*9) calc(var(--px)*6) 0 0 var(--pixel-dark), calc(var(--px)*9) calc(var(--px)*5) 0 0 var(--pixel-mid), calc(var(--px)*9) calc(var(--px)*4) 0 0 var(--pixel-light); }
+  45.83%{ box-shadow: calc(var(--px)*9) calc(var(--px)*7) 0 0 var(--pixel-dark), calc(var(--px)*9) calc(var(--px)*6) 0 0 var(--pixel-mid), calc(var(--px)*9) calc(var(--px)*5) 0 0 var(--pixel-light); }
+  50%   { box-shadow: calc(var(--px)*9) calc(var(--px)*8) 0 0 var(--pixel-dark), calc(var(--px)*9) calc(var(--px)*7) 0 0 var(--pixel-mid), calc(var(--px)*9) calc(var(--px)*6) 0 0 var(--pixel-light); }
+  54.17%{ box-shadow: calc(var(--px)*9) calc(var(--px)*9) 0 0 var(--pixel-dark), calc(var(--px)*9) calc(var(--px)*8) 0 0 var(--pixel-mid), calc(var(--px)*9) calc(var(--px)*7) 0 0 var(--pixel-light); }
+  /* Низ: 8,9 -> 2,9 */
+  58.33%{ box-shadow: calc(var(--px)*8) calc(var(--px)*9) 0 0 var(--pixel-dark), calc(var(--px)*9) calc(var(--px)*9) 0 0 var(--pixel-mid), calc(var(--px)*9) calc(var(--px)*8) 0 0 var(--pixel-light); }
+  62.5% { box-shadow: calc(var(--px)*7) calc(var(--px)*9) 0 0 var(--pixel-dark), calc(var(--px)*8) calc(var(--px)*9) 0 0 var(--pixel-mid), calc(var(--px)*9) calc(var(--px)*9) 0 0 var(--pixel-light); }
+  66.67%{ box-shadow: calc(var(--px)*6) calc(var(--px)*9) 0 0 var(--pixel-dark), calc(var(--px)*7) calc(var(--px)*9) 0 0 var(--pixel-mid), calc(var(--px)*8) calc(var(--px)*9) 0 0 var(--pixel-light); }
+  70.83%{ box-shadow: calc(var(--px)*5) calc(var(--px)*9) 0 0 var(--pixel-dark), calc(var(--px)*6) calc(var(--px)*9) 0 0 var(--pixel-mid), calc(var(--px)*7) calc(var(--px)*9) 0 0 var(--pixel-light); }
+  75%   { box-shadow: calc(var(--px)*4) calc(var(--px)*9) 0 0 var(--pixel-dark), calc(var(--px)*5) calc(var(--px)*9) 0 0 var(--pixel-mid), calc(var(--px)*6) calc(var(--px)*9) 0 0 var(--pixel-light); }
+  79.17%{ box-shadow: calc(var(--px)*3) calc(var(--px)*9) 0 0 var(--pixel-dark), calc(var(--px)*4) calc(var(--px)*9) 0 0 var(--pixel-mid), calc(var(--px)*5) calc(var(--px)*9) 0 0 var(--pixel-light); }
+  83.33%{ box-shadow: calc(var(--px)*2) calc(var(--px)*9) 0 0 var(--pixel-dark), calc(var(--px)*3) calc(var(--px)*9) 0 0 var(--pixel-mid), calc(var(--px)*4) calc(var(--px)*9) 0 0 var(--pixel-light); }
+  /* Лево: 2,8 -> 2,2 */
+  87.5% { box-shadow: calc(var(--px)*2) calc(var(--px)*8) 0 0 var(--pixel-dark), calc(var(--px)*2) calc(var(--px)*9) 0 0 var(--pixel-mid), calc(var(--px)*3) calc(var(--px)*9) 0 0 var(--pixel-light); }
+  91.67%{ box-shadow: calc(var(--px)*2) calc(var(--px)*7) 0 0 var(--pixel-dark), calc(var(--px)*2) calc(var(--px)*8) 0 0 var(--pixel-mid), calc(var(--px)*2) calc(var(--px)*9) 0 0 var(--pixel-light); }
+  95.83%{ box-shadow: calc(var(--px)*2) calc(var(--px)*5) 0 0 var(--pixel-dark), calc(var(--px)*2) calc(var(--px)*6) 0 0 var(--pixel-mid), calc(var(--px)*2) calc(var(--px)*7) 0 0 var(--pixel-light); }
+  100%  { box-shadow: calc(var(--px)*3) calc(var(--px)*2) 0 0 var(--pixel-dark), calc(var(--px)*2) calc(var(--px)*3) 0 0 var(--pixel-mid), calc(var(--px)*2) calc(var(--px)*4) 0 0 var(--pixel-light); }
 }
 

@@ -7,17 +7,14 @@ interface OptimizedVideoPlayerProps {
   src: string
   shouldAutoplay?: boolean
   className?: string
-  blurDataURL?: string
 }
 
 export function OptimizedVideoPlayer({
   src,
   shouldAutoplay = false,
   className,
-  blurDataURL,
 }: OptimizedVideoPlayerProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const videoRef = useRef<HTMLVideoElement>(null)
   const [shouldLoad, setShouldLoad] = useState(false)
   const [isVideoLoaded, setIsVideoLoaded] = useState(false)
 
@@ -45,28 +42,16 @@ export function OptimizedVideoPlayer({
 
   return (
     <div ref={containerRef} className={className}>
-      {/* Placeholder - преобладающий цвет с opacity 0.05 */}
-      {blurDataURL && !isVideoLoaded && (
-        <>
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundColor: blurDataURL,
-            }}
-          />
-          {/* Loading spinner поверх placeholder */}
-          {shouldLoad && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <PixelLoadingSpinner size={3} />
-            </div>
-          )}
-        </>
+      {/* Pixel loading spinner */}
+      {!isVideoLoaded && shouldLoad && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center">
+          <PixelLoadingSpinner />
+        </div>
       )}
 
       {/* Video */}
       {shouldLoad && (
         <video
-          ref={videoRef}
           src={src}
           autoPlay={shouldAutoplay}
           loop={shouldAutoplay}
