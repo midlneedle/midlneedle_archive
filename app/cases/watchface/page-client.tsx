@@ -1,6 +1,5 @@
 'use client'
 
-import { ViewTransition } from 'react'
 import styles from "./styles.module.css"
 
 type ArticleBlock =
@@ -88,8 +87,7 @@ export default function PageClient({ title, blocks, footnotes }: PageClientProps
   const footnoteCounter = { current: 0 }
 
   return (
-    <ViewTransition>
-      <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background">
         <div className="mx-auto max-w-2xl">
           <section>
             <header className="flex flex-col gap-[var(--space-text)]">
@@ -177,6 +175,5 @@ export default function PageClient({ title, blocks, footnotes }: PageClientProps
           </section>
         </div>
       </main>
-    </ViewTransition>
   )
 }
