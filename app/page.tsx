@@ -4,6 +4,7 @@ import { CasesGrid } from "@/components/cases-grid"
 import { MediaProvider } from "@/components/media-context"
 import { VideoCard } from "@/components/video-card"
 import { withBasePath } from "@/lib/base-path"
+import { videoPlaceholders } from "@/lib/video-placeholders"
 
 const videos = {
   film_segment: withBasePath("/videos/film_segment.mp4"),
@@ -51,6 +52,7 @@ export default function Home() {
                   description="Cinematic UI transitions"
                   orientation="vertical"
                   showTitle={true}
+                  blurDataURL={videoPlaceholders.film_segment}
                 />
                 <VideoCard
                   src={videos.fofocus}
@@ -58,6 +60,7 @@ export default function Home() {
                   description="Smooth focus state transitions"
                   orientation="vertical"
                   showTitle={true}
+                  blurDataURL={videoPlaceholders.fofocus}
                 />
               </div>
 
@@ -69,6 +72,7 @@ export default function Home() {
                   description="Cross Media Bar navigation system"
                   orientation="horizontal"
                   showTitle={true}
+                  blurDataURL={videoPlaceholders.xmbb}
                 />
               </div>
 
@@ -80,6 +84,7 @@ export default function Home() {
                   description="Rotary picker interface"
                   orientation="vertical"
                   showTitle={true}
+                  blurDataURL={videoPlaceholders.wheeel}
                 />
                 <VideoCard
                   src={videos.cummera}
@@ -87,6 +92,7 @@ export default function Home() {
                   description="Gesture-driven list interactions"
                   orientation="vertical"
                   showTitle={true}
+                  blurDataURL={videoPlaceholders.cummera}
                 />
               </div>
 
@@ -98,6 +104,7 @@ export default function Home() {
                   description="Custom haptic patterns for UI feedback"
                   orientation="vertical"
                   showTitle={true}
+                  blurDataURL={videoPlaceholders.winxp}
                 />
                 <VideoCard
                   src={videos.film_segment}
@@ -105,6 +112,7 @@ export default function Home() {
                   description="Cinematic UI transitions"
                   orientation="vertical"
                   showTitle={true}
+                  blurDataURL={videoPlaceholders.film_segment}
                 />
               </div>
 
@@ -116,6 +124,7 @@ export default function Home() {
                   description="Modern dashboard design system"
                   orientation="horizontal"
                   showTitle={true}
+                  blurDataURL={videoPlaceholders.lumon_trimmmed}
                 />
               </div>
             </div>

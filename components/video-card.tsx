@@ -15,6 +15,7 @@ interface VideoCardProps {
   showTitle?: boolean
   showDescription?: boolean
   className?: string
+  blurDataURL?: string
 }
 
 export function VideoCard({
@@ -25,6 +26,7 @@ export function VideoCard({
   showTitle = true,
   showDescription = true,
   className,
+  blurDataURL,
 }: VideoCardProps) {
   const id = useId()
   const { hoveredId, expandedId, setHoveredId, setExpandedId } = useMedia()
@@ -80,6 +82,7 @@ export function VideoCard({
               src={src}
               shouldAutoplay={shouldAutoplay}
               className="relative h-full w-full"
+              blurDataURL={blurDataURL}
             />
             {!shouldAutoplay && (
               <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
