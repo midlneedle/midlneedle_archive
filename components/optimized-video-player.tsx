@@ -1,6 +1,7 @@
 "use client"
 
 import { useRef, useEffect, useState } from "react"
+import { PixelLoadingSpinner } from "./pixel-loading-spinner"
 
 interface OptimizedVideoPlayerProps {
   src: string
@@ -44,16 +45,22 @@ export function OptimizedVideoPlayer({
 
   return (
     <div ref={containerRef} className={className}>
-      {/* Blur placeholder */}
+      {/* Placeholder - первый кадр без blur */}
       {blurDataURL && !isVideoLoaded && (
-        <div
-          className="absolute inset-0 bg-cover bg-center transition-opacity duration-500"
-          style={{
-            backgroundImage: `url(${blurDataURL})`,
-            filter: "blur(20px)",
-            transform: "scale(1.1)",
-          }}
-        />
+        <>
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `url(${blurDataURL})`,
+            }}
+          />
+          {/* Loading spinner поверх placeholder */}
+          {shouldLoad && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/10">
+              <PixelLoadingSpinner size={3} />
+            </div>
+          )}
+        </>
       )}
 
       {/* Video */}
@@ -69,7 +76,7 @@ export function OptimizedVideoPlayer({
           className="absolute inset-0 h-full w-full object-cover"
           style={{
             opacity: isVideoLoaded ? 1 : 0,
-            transition: "opacity 500ms ease-in-out",
+            transition: "opacity 300ms ease-in-out",
           }}
         />
       )}

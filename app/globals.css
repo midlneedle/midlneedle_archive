@@ -1909,3 +1909,56 @@ html {
   opacity: 0.3;
 }
 
+/* ========================================
+   Pixel Loading Spinner
+   ======================================== */
+
+.pixel-loading-spinner {
+  --px: calc(0.08em * var(--spinner-size, 1));
+  --pixel-dark: rgb(53 59 66 / 0.9);
+  position: relative;
+  display: inline-block;
+  width: calc(var(--px) * 10);
+  height: calc(var(--px) * 10);
+  image-rendering: pixelated;
+}
+
+.pixel-spinner-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--px);
+  height: var(--px);
+  border-radius: 35%;
+  pointer-events: none;
+  animation: pixel-spin 0.8s steps(4) infinite;
+}
+
+@keyframes pixel-spin {
+  0% {
+    box-shadow:
+      calc(var(--px) * 5) calc(var(--px) * 2) 0 0 var(--pixel-dark),
+      calc(var(--px) * 6) calc(var(--px) * 2) 0 0 var(--pixel-dark);
+  }
+  25% {
+    box-shadow:
+      calc(var(--px) * 8) calc(var(--px) * 5) 0 0 var(--pixel-dark),
+      calc(var(--px) * 8) calc(var(--px) * 6) 0 0 var(--pixel-dark);
+  }
+  50% {
+    box-shadow:
+      calc(var(--px) * 5) calc(var(--px) * 9) 0 0 var(--pixel-dark),
+      calc(var(--px) * 6) calc(var(--px) * 9) 0 0 var(--pixel-dark);
+  }
+  75% {
+    box-shadow:
+      calc(var(--px) * 3) calc(var(--px) * 5) 0 0 var(--pixel-dark),
+      calc(var(--px) * 3) calc(var(--px) * 6) 0 0 var(--pixel-dark);
+  }
+  100% {
+    box-shadow:
+      calc(var(--px) * 5) calc(var(--px) * 2) 0 0 var(--pixel-dark),
+      calc(var(--px) * 6) calc(var(--px) * 2) 0 0 var(--pixel-dark);
+  }
+}
+
