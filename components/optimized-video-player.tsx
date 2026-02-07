@@ -1,7 +1,6 @@
 "use client"
 
 import { useRef, useEffect, useState } from "react"
-import BackgroundPlayer from "next-video/background-player"
 
 interface OptimizedVideoPlayerProps {
   src: string
@@ -42,19 +41,13 @@ export function OptimizedVideoPlayer({
   return (
     <div ref={containerRef} className={className}>
       {shouldLoad ? (
-        <BackgroundPlayer
+        <video
           src={src}
           autoPlay={shouldAutoplay}
           loop={shouldAutoplay}
           muted
           playsInline
-          style={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-          }}
+          className="absolute inset-0 h-full w-full object-cover"
         />
       ) : null}
     </div>
