@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import { useMedia } from "./media-context"
 import { MorphingMedia } from "./morphing-media"
 import { useVideoAutoplay } from "@/hooks/use-video-autoplay"
+import { OptimizedVideoPlayer } from "./optimized-video-player"
 
 interface VideoCardProps {
   src: string
@@ -75,26 +76,10 @@ export function VideoCard({
               "relative h-full w-full overflow-hidden rounded-[var(--radius-card)] border border-border bg-black"
             )}
           >
-            <video
+            <OptimizedVideoPlayer
               src={src}
-              data-autoplay={shouldAutoplay ? "true" : "false"}
-              autoPlay={shouldAutoplay}
-              loop={shouldAutoplay}
-              muted
-              playsInline
-              preload={shouldAutoplay ? "auto" : "metadata"}
-              onLoadedData={(event) => {
-                if (shouldAutoplay) return
-                const video = event.currentTarget
-                if (video.currentTime === 0) {
-                  try {
-                    video.currentTime = 0.0001
-                  } catch {
-                    // Ignore seek errors; the browser will show the first frame if possible.
-                  }
-                }
-              }}
-              className="absolute inset-0 h-full w-full object-cover transform-gpu scale-[1.01]"
+              shouldAutoplay={shouldAutoplay}
+              className="relative h-full w-full"
             />
             {!shouldAutoplay && (
               <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
