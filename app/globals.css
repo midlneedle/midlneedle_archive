@@ -1916,9 +1916,9 @@ html {
 
 .pixel-loading {
   --px: 0.08em;
-  --pixel-dark: rgb(53 59 66 / 0.78);
+  --pixel-dark: rgb(53 59 66 / 0.52);
   --pixel-mid: var(--pixel-dark);
-  --pixel-light: rgb(53 59 66 / 0.52);
+  --pixel-light: var(--pixel-dark);
   --pixel-faint: rgb(53 59 66 / 0.18);
   --pixel-loader-1:
     calc(var(--px) * 2) calc(var(--px) * 2) 0 0 var(--pixel-dark),
