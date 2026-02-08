@@ -1997,6 +1997,11 @@ html {
   image-rendering: pixelated;
 }
 
+.video-card.video-card--hovered .pixel-loading {
+  transform: scale(0.9803921569);
+  transform-origin: center;
+}
+
 /* Frame — same 4 corner pixels as title graphics */
 .pixel-loading-frame {
   position: absolute;

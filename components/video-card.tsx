@@ -50,7 +50,8 @@ export function VideoCard({
     <>
       <div
         className={cn(
-          "relative flex flex-col transition-transform duration-300 ease-out transform-gpu origin-center",
+          "video-card relative flex flex-col transition-transform duration-300 ease-out transform-gpu origin-center",
+          isHovered && !expandedId && "video-card--hovered scale-[1.02]",
           isHovered && !expandedId && "z-40",
           className
         )}
