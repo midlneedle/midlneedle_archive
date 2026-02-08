@@ -79,6 +79,7 @@
   --article-paragraph-gap: 44px;
   --article-title-gap: 18px;
   --article-inner-gap: 18px;
+  --pixel-unit: 2px;
 
   /* Typography settings */
   --sans-variation: 'opsz' 32;
@@ -499,7 +500,7 @@ html {
 
   .title-pixel {
     --title-pixel-speed: 3.4s;
-    --px: 0.08em;
+    --px: var(--pixel-unit);
     --pixel-dark: rgb(53 59 66 / 0.9);
     --pixel-mid: rgb(53 59 66 / 0.6);
     --pixel-light: rgb(53 59 66 / 0.35);
@@ -1070,7 +1071,7 @@ html {
      ======================================== */
 
   .title-pixel-interactive {
-    --px: 0.08em;
+    --px: var(--pixel-unit);
     --pixel-dark: rgb(53 59 66 / 0.9);
     --pixel-mid: rgb(53 59 66 / 0.6);
     --pixel-light: rgb(53 59 66 / 0.35);
@@ -1915,7 +1916,7 @@ html {
    ======================================== */
 
 .pixel-loading {
-  --px: 0.08em;
+  --px: var(--pixel-unit);
   --pixel-dark: rgb(53 59 66 / 0.52);
   --pixel-mid: var(--pixel-dark);
   --pixel-light: var(--pixel-dark);
