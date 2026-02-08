@@ -1910,24 +1910,65 @@ html {
 }
 
 /* ========================================
-   Pixel Loading Spinner — 20x20 grid
-   Same pixel style as InteractivePixel
+   Pixel Loading Spinner — 10x10 grid
+   Same size and pixel language as title icon
    ======================================== */
 
 .pixel-loading {
-  --px: 4px;
+  --px: 0.08em;
   --pixel-dark: rgb(53 59 66 / 0.9);
   --pixel-mid: rgb(53 59 66 / 0.6);
   --pixel-light: rgb(53 59 66 / 0.35);
   --pixel-faint: rgb(53 59 66 / 0.18);
+  --pixel-loader-1:
+    calc(var(--px) * 4) calc(var(--px) * 2) 0 0 var(--pixel-dark),
+    calc(var(--px) * 5) calc(var(--px) * 2) 0 0 var(--pixel-mid),
+    calc(var(--px) * 4) calc(var(--px) * 3) 0 0 var(--pixel-mid),
+    calc(var(--px) * 5) calc(var(--px) * 3) 0 0 var(--pixel-light);
+  --pixel-loader-2:
+    calc(var(--px) * 6) calc(var(--px) * 3) 0 0 var(--pixel-dark),
+    calc(var(--px) * 7) calc(var(--px) * 3) 0 0 var(--pixel-mid),
+    calc(var(--px) * 6) calc(var(--px) * 4) 0 0 var(--pixel-mid),
+    calc(var(--px) * 7) calc(var(--px) * 4) 0 0 var(--pixel-light);
+  --pixel-loader-3:
+    calc(var(--px) * 7) calc(var(--px) * 5) 0 0 var(--pixel-dark),
+    calc(var(--px) * 8) calc(var(--px) * 5) 0 0 var(--pixel-mid),
+    calc(var(--px) * 7) calc(var(--px) * 6) 0 0 var(--pixel-mid),
+    calc(var(--px) * 8) calc(var(--px) * 6) 0 0 var(--pixel-light);
+  --pixel-loader-4:
+    calc(var(--px) * 6) calc(var(--px) * 7) 0 0 var(--pixel-dark),
+    calc(var(--px) * 7) calc(var(--px) * 7) 0 0 var(--pixel-mid),
+    calc(var(--px) * 6) calc(var(--px) * 8) 0 0 var(--pixel-mid),
+    calc(var(--px) * 7) calc(var(--px) * 8) 0 0 var(--pixel-light);
+  --pixel-loader-5:
+    calc(var(--px) * 4) calc(var(--px) * 8) 0 0 var(--pixel-dark),
+    calc(var(--px) * 5) calc(var(--px) * 8) 0 0 var(--pixel-mid),
+    calc(var(--px) * 4) calc(var(--px) * 9) 0 0 var(--pixel-mid),
+    calc(var(--px) * 5) calc(var(--px) * 9) 0 0 var(--pixel-light);
+  --pixel-loader-6:
+    calc(var(--px) * 2) calc(var(--px) * 7) 0 0 var(--pixel-dark),
+    calc(var(--px) * 3) calc(var(--px) * 7) 0 0 var(--pixel-mid),
+    calc(var(--px) * 2) calc(var(--px) * 8) 0 0 var(--pixel-mid),
+    calc(var(--px) * 3) calc(var(--px) * 8) 0 0 var(--pixel-light);
+  --pixel-loader-7:
+    calc(var(--px) * 1) calc(var(--px) * 5) 0 0 var(--pixel-dark),
+    calc(var(--px) * 2) calc(var(--px) * 5) 0 0 var(--pixel-mid),
+    calc(var(--px) * 1) calc(var(--px) * 6) 0 0 var(--pixel-mid),
+    calc(var(--px) * 2) calc(var(--px) * 6) 0 0 var(--pixel-light);
+  --pixel-loader-8:
+    calc(var(--px) * 2) calc(var(--px) * 3) 0 0 var(--pixel-dark),
+    calc(var(--px) * 3) calc(var(--px) * 3) 0 0 var(--pixel-mid),
+    calc(var(--px) * 2) calc(var(--px) * 4) 0 0 var(--pixel-mid),
+    calc(var(--px) * 3) calc(var(--px) * 4) 0 0 var(--pixel-light);
   position: relative;
   display: inline-block;
-  width: calc(var(--px) * 20);
-  height: calc(var(--px) * 20);
+  font-size: 1.2em;
+  width: calc(var(--px) * 10);
+  height: calc(var(--px) * 10);
   image-rendering: pixelated;
 }
 
-/* Рамка — 4 угловые точки */
+/* Frame — same 4 corner pixels as title graphics */
 .pixel-loading-frame {
   position: absolute;
   top: 0;
@@ -1939,14 +1980,12 @@ html {
   z-index: 2;
   box-shadow:
     calc(var(--px) * 1) calc(var(--px) * 1) 0 0 var(--pixel-faint),
-    calc(var(--px) * 20) calc(var(--px) * 1) 0 0 var(--pixel-faint),
-    calc(var(--px) * 1) calc(var(--px) * 20) 0 0 var(--pixel-faint),
-    calc(var(--px) * 20) calc(var(--px) * 20) 0 0 var(--pixel-faint);
+    calc(var(--px) * 10) calc(var(--px) * 1) 0 0 var(--pixel-faint),
+    calc(var(--px) * 1) calc(var(--px) * 10) 0 0 var(--pixel-faint),
+    calc(var(--px) * 10) calc(var(--px) * 10) 0 0 var(--pixel-faint);
 }
 
-/* Trail — 3 пикселя (dark → mid → light) по периметру
-   Путь: верх(2→19), право(2→19), низ(19→2), лево(19→2)
-   24 шага через каждые ~3 позиции */
+/* 2x2 loader block (4 pixels) moving in a circular loop */
 .pixel-loading-trail {
   position: absolute;
   top: 0;
@@ -1956,38 +1995,40 @@ html {
   border-radius: 35%;
   pointer-events: none;
   z-index: 1;
-  animation: pixel-trail-loop 3s steps(24) infinite;
+  box-shadow: var(--pixel-loader-1);
+  animation: pixel-loader-loop 1.9s steps(1) infinite;
 }
 
-@keyframes pixel-trail-loop {
-  /* ── Верх: y=2, x движется вправо ── */
-  0%     { box-shadow: calc(var(--px)*3)  calc(var(--px)*2)  0 0 var(--pixel-dark), calc(var(--px)*2)  calc(var(--px)*3)  0 0 var(--pixel-mid),  calc(var(--px)*2)  calc(var(--px)*5)  0 0 var(--pixel-light); }
-  4.17%  { box-shadow: calc(var(--px)*6)  calc(var(--px)*2)  0 0 var(--pixel-dark), calc(var(--px)*3)  calc(var(--px)*2)  0 0 var(--pixel-mid),  calc(var(--px)*2)  calc(var(--px)*3)  0 0 var(--pixel-light); }
-  8.33%  { box-shadow: calc(var(--px)*9)  calc(var(--px)*2)  0 0 var(--pixel-dark), calc(var(--px)*6)  calc(var(--px)*2)  0 0 var(--pixel-mid),  calc(var(--px)*3)  calc(var(--px)*2)  0 0 var(--pixel-light); }
-  12.5%  { box-shadow: calc(var(--px)*12) calc(var(--px)*2)  0 0 var(--pixel-dark), calc(var(--px)*9)  calc(var(--px)*2)  0 0 var(--pixel-mid),  calc(var(--px)*6)  calc(var(--px)*2)  0 0 var(--pixel-light); }
-  16.67% { box-shadow: calc(var(--px)*15) calc(var(--px)*2)  0 0 var(--pixel-dark), calc(var(--px)*12) calc(var(--px)*2)  0 0 var(--pixel-mid),  calc(var(--px)*9)  calc(var(--px)*2)  0 0 var(--pixel-light); }
-  20.83% { box-shadow: calc(var(--px)*18) calc(var(--px)*2)  0 0 var(--pixel-dark), calc(var(--px)*15) calc(var(--px)*2)  0 0 var(--pixel-mid),  calc(var(--px)*12) calc(var(--px)*2)  0 0 var(--pixel-light); }
-  /* ── Право: x=19, y движется вниз ── */
-  25%    { box-shadow: calc(var(--px)*19) calc(var(--px)*5)  0 0 var(--pixel-dark), calc(var(--px)*19) calc(var(--px)*2)  0 0 var(--pixel-mid),  calc(var(--px)*18) calc(var(--px)*2)  0 0 var(--pixel-light); }
-  29.17% { box-shadow: calc(var(--px)*19) calc(var(--px)*8)  0 0 var(--pixel-dark), calc(var(--px)*19) calc(var(--px)*5)  0 0 var(--pixel-mid),  calc(var(--px)*19) calc(var(--px)*2)  0 0 var(--pixel-light); }
-  33.33% { box-shadow: calc(var(--px)*19) calc(var(--px)*11) 0 0 var(--pixel-dark), calc(var(--px)*19) calc(var(--px)*8)  0 0 var(--pixel-mid),  calc(var(--px)*19) calc(var(--px)*5)  0 0 var(--pixel-light); }
-  37.5%  { box-shadow: calc(var(--px)*19) calc(var(--px)*14) 0 0 var(--pixel-dark), calc(var(--px)*19) calc(var(--px)*11) 0 0 var(--pixel-mid),  calc(var(--px)*19) calc(var(--px)*8)  0 0 var(--pixel-light); }
-  41.67% { box-shadow: calc(var(--px)*19) calc(var(--px)*17) 0 0 var(--pixel-dark), calc(var(--px)*19) calc(var(--px)*14) 0 0 var(--pixel-mid),  calc(var(--px)*19) calc(var(--px)*11) 0 0 var(--pixel-light); }
-  45.83% { box-shadow: calc(var(--px)*19) calc(var(--px)*19) 0 0 var(--pixel-dark), calc(var(--px)*19) calc(var(--px)*17) 0 0 var(--pixel-mid),  calc(var(--px)*19) calc(var(--px)*14) 0 0 var(--pixel-light); }
-  /* ── Низ: y=19, x движется влево ── */
-  50%    { box-shadow: calc(var(--px)*16) calc(var(--px)*19) 0 0 var(--pixel-dark), calc(var(--px)*19) calc(var(--px)*19) 0 0 var(--pixel-mid),  calc(var(--px)*19) calc(var(--px)*17) 0 0 var(--pixel-light); }
-  54.17% { box-shadow: calc(var(--px)*13) calc(var(--px)*19) 0 0 var(--pixel-dark), calc(var(--px)*16) calc(var(--px)*19) 0 0 var(--pixel-mid),  calc(var(--px)*19) calc(var(--px)*19) 0 0 var(--pixel-light); }
-  58.33% { box-shadow: calc(var(--px)*10) calc(var(--px)*19) 0 0 var(--pixel-dark), calc(var(--px)*13) calc(var(--px)*19) 0 0 var(--pixel-mid),  calc(var(--px)*16) calc(var(--px)*19) 0 0 var(--pixel-light); }
-  62.5%  { box-shadow: calc(var(--px)*7)  calc(var(--px)*19) 0 0 var(--pixel-dark), calc(var(--px)*10) calc(var(--px)*19) 0 0 var(--pixel-mid),  calc(var(--px)*13) calc(var(--px)*19) 0 0 var(--pixel-light); }
-  66.67% { box-shadow: calc(var(--px)*4)  calc(var(--px)*19) 0 0 var(--pixel-dark), calc(var(--px)*7)  calc(var(--px)*19) 0 0 var(--pixel-mid),  calc(var(--px)*10) calc(var(--px)*19) 0 0 var(--pixel-light); }
-  70.83% { box-shadow: calc(var(--px)*2)  calc(var(--px)*19) 0 0 var(--pixel-dark), calc(var(--px)*4)  calc(var(--px)*19) 0 0 var(--pixel-mid),  calc(var(--px)*7)  calc(var(--px)*19) 0 0 var(--pixel-light); }
-  /* ── Лево: x=2, y движется вверх ── */
-  75%    { box-shadow: calc(var(--px)*2)  calc(var(--px)*16) 0 0 var(--pixel-dark), calc(var(--px)*2)  calc(var(--px)*19) 0 0 var(--pixel-mid),  calc(var(--px)*4)  calc(var(--px)*19) 0 0 var(--pixel-light); }
-  79.17% { box-shadow: calc(var(--px)*2)  calc(var(--px)*13) 0 0 var(--pixel-dark), calc(var(--px)*2)  calc(var(--px)*16) 0 0 var(--pixel-mid),  calc(var(--px)*2)  calc(var(--px)*19) 0 0 var(--pixel-light); }
-  83.33% { box-shadow: calc(var(--px)*2)  calc(var(--px)*10) 0 0 var(--pixel-dark), calc(var(--px)*2)  calc(var(--px)*13) 0 0 var(--pixel-mid),  calc(var(--px)*2)  calc(var(--px)*16) 0 0 var(--pixel-light); }
-  87.5%  { box-shadow: calc(var(--px)*2)  calc(var(--px)*7)  0 0 var(--pixel-dark), calc(var(--px)*2)  calc(var(--px)*10) 0 0 var(--pixel-mid),  calc(var(--px)*2)  calc(var(--px)*13) 0 0 var(--pixel-light); }
-  91.67% { box-shadow: calc(var(--px)*2)  calc(var(--px)*5)  0 0 var(--pixel-dark), calc(var(--px)*2)  calc(var(--px)*7)  0 0 var(--pixel-mid),  calc(var(--px)*2)  calc(var(--px)*10) 0 0 var(--pixel-light); }
-  95.83% { box-shadow: calc(var(--px)*2)  calc(var(--px)*3)  0 0 var(--pixel-dark), calc(var(--px)*2)  calc(var(--px)*5)  0 0 var(--pixel-mid),  calc(var(--px)*2)  calc(var(--px)*7)  0 0 var(--pixel-light); }
-  100%   { box-shadow: calc(var(--px)*3)  calc(var(--px)*2)  0 0 var(--pixel-dark), calc(var(--px)*2)  calc(var(--px)*3)  0 0 var(--pixel-mid),  calc(var(--px)*2)  calc(var(--px)*5)  0 0 var(--pixel-light); }
+@keyframes pixel-loader-loop {
+  0%,
+  100% {
+    box-shadow: var(--pixel-loader-1);
+  }
+  12.5% {
+    box-shadow: var(--pixel-loader-2);
+  }
+  25% {
+    box-shadow: var(--pixel-loader-3);
+  }
+  37.5% {
+    box-shadow: var(--pixel-loader-4);
+  }
+  50% {
+    box-shadow: var(--pixel-loader-5);
+  }
+  62.5% {
+    box-shadow: var(--pixel-loader-6);
+  }
+  75% {
+    box-shadow: var(--pixel-loader-7);
+  }
+  87.5% {
+    box-shadow: var(--pixel-loader-8);
+  }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .pixel-loading-trail {
+    animation: none;
+  }
+}
