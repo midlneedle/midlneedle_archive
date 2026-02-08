@@ -297,31 +297,11 @@ html {
     @apply border-border;
   }
 
-  :where(
-      .border,
-      .border-t,
-      .border-r,
-      .border-b,
-      .border-l,
-      .border-x,
-      .border-y,
-      [class*="border-"]
-    ):not(.leva-c__panel):not(.leva-c__panel *) {
+  .inner-stroke {
     position: relative;
-    border-color: transparent !important;
-    border-width: 0 !important;
   }
 
-  :where(
-      .border,
-      .border-t,
-      .border-r,
-      .border-b,
-      .border-l,
-      .border-x,
-      .border-y,
-      [class*="border-"]
-    ):not(.leva-c__panel):not(.leva-c__panel *)::after {
+  .inner-stroke::after {
     content: "";
     position: absolute;
     inset: 0;

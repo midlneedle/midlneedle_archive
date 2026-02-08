@@ -48,8 +48,7 @@ export function VideoCard({
     <>
       <div
         className={cn(
-          "relative flex flex-col transition-transform duration-300 ease-out origin-center",
-          !expandedId && "transform-gpu hover:scale-[1.02] hover:z-40",
+          "relative flex flex-col origin-center",
           className
         )}
       >
@@ -60,6 +59,7 @@ export function VideoCard({
           onClose={handleClose}
           triggerClassName={cn(
             "cursor-zoom-in mb-[var(--space-inset)]",
+            !expandedId && "transition-transform duration-300 ease-out hover:scale-[1.02]",
             orientation === "vertical" ? "aspect-[9/16]" : "aspect-video"
           )}
           expandedClassName={cn(
@@ -70,7 +70,7 @@ export function VideoCard({
         >
           <div
             className={cn(
-              "relative h-full w-full overflow-hidden rounded-[var(--radius-card)] border border-border"
+              "inner-stroke relative h-full w-full overflow-hidden rounded-[var(--radius-card)] border border-transparent"
             )}
             style={{ backgroundColor: blurDataURL || "#000" }}
           >

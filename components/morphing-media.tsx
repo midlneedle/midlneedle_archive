@@ -289,7 +289,7 @@ export function MorphingMedia({
                 {isModalVisible ? (
                   <>
                     <motion.div
-                      className="fixed inset-0 z-[1900] bg-white/95 cursor-zoom-out"
+                      className="fixed inset-0 bg-white/95 cursor-zoom-out"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
@@ -297,7 +297,7 @@ export function MorphingMedia({
                     />
                     <motion.div
                       layoutRoot
-                      className="fixed inset-0 z-[2000] flex items-center justify-center p-8 cursor-zoom-out"
+                      className="fixed inset-0 flex items-center justify-center p-8 cursor-zoom-out"
                       onClick={onClose}
                     >
                       <motion.div
