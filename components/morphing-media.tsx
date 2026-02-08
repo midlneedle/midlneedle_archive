@@ -35,8 +35,10 @@ export function MorphingMedia({
   const [mounted, setMounted] = useState(false)
   const triggerRef = useRef<HTMLDivElement | null>(null)
   const modalRef = useRef<HTMLDivElement | null>(null)
+  const dialogRef = useRef<HTMLDialogElement | null>(null)
   const lastActiveRef = useRef<HTMLElement | null>(null)
   const wasOpenRef = useRef(false)
+  const [isModalVisible, setIsModalVisible] = useState(false)
   const scrollLockStyles = useRef<{
     bodyPaddingRight: string
     bodyOverflow: string
@@ -45,6 +47,25 @@ export function MorphingMedia({
   useEffect(() => {
     setMounted(true)
     return () => setMounted(false)
+  }, [])
+
+  const showTopLayerDialog = useCallback(() => {
+    const dialog = dialogRef.current
+    if (!dialog || dialog.open) return
+
+    try {
+      dialog.showModal()
+    } catch {
+      requestAnimationFrame(() => {
+        const current = dialogRef.current
+        if (!current || current.open) return
+        try {
+          current.showModal()
+        } catch {
+          // Keep graceful behavior if browser blocks modal promotion.
+        }
+      })
+    }
   }, [])
 
   useLayoutEffect(() => {
@@ -87,6 +108,26 @@ export function MorphingMedia({
       restoreScrollLock()
     }
   }, [isOpen])
+
+  useLayoutEffect(() => {
+    if (!mounted) return
+    if (isOpen) {
+      setIsModalVisible(true)
+      showTopLayerDialog()
+      return
+    }
+
+    setIsModalVisible(false)
+  }, [isOpen, mounted, showTopLayerDialog])
+
+  useEffect(() => {
+    return () => {
+      const dialog = dialogRef.current
+      if (dialog?.open) {
+        dialog.close()
+      }
+    }
+  }, [])
 
   const pauseAll = useCallback((root: HTMLElement | null) => {
     if (!root) return
@@ -168,6 +209,8 @@ export function MorphingMedia({
 
   const handleOpen = () => {
     lastActiveRef.current = document.activeElement as HTMLElement
+    setIsModalVisible(true)
+    showTopLayerDialog()
     onOpen()
   }
 
@@ -209,7 +252,7 @@ export function MorphingMedia({
         layoutDependency={isOpen}
         ref={triggerRef}
         className={cn(
-          "relative overflow-clip transform-gpu",
+          "relative overflow-clip transform-gpu outline-none focus-visible:outline-none",
           isOpen && "pointer-events-none",
           triggerClassName
         )}
@@ -224,42 +267,62 @@ export function MorphingMedia({
       </motion.div>
       {mounted
         ? createPortal(
-            <AnimatePresence initial={false} mode="sync">
-              {isOpen && (
-                <>
-                  <motion.div
-                    className="fixed inset-0 z-40 bg-white/95 cursor-zoom-out"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    onClick={onClose}
-                  />
-                  <motion.div
-                    layoutRoot
-                    className="fixed inset-0 z-50 flex items-center justify-center p-8 cursor-zoom-out"
-                    onClick={onClose}
-                  >
+            <dialog
+              ref={dialogRef}
+              className="morphing-media-dialog fixed inset-0 m-0 h-screen w-screen max-h-none max-w-none overflow-visible bg-transparent p-0 text-inherit"
+              style={{ border: "none" }}
+              onCancel={(event) => {
+                event.preventDefault()
+                onClose()
+              }}
+            >
+              <AnimatePresence
+                initial={false}
+                mode="sync"
+                onExitComplete={() => {
+                  const dialog = dialogRef.current
+                  if (!isOpen && dialog?.open) {
+                    dialog.close()
+                  }
+                }}
+              >
+                {isModalVisible ? (
+                  <>
                     <motion.div
-                      layoutId={layoutId}
-                      layout
-                      layoutDependency={isOpen}
-                      ref={modalRef}
-                      role="dialog"
-                      aria-modal="true"
-                      aria-label="Media preview"
-                      tabIndex={-1}
-                      className={cn(
-                        "relative overflow-hidden cursor-zoom-out transform-gpu",
-                        expandedClassName
-                      )}
-                      onKeyDown={handleModalKeyDown}
+                      className="fixed inset-0 z-[1900] bg-white/95 cursor-zoom-out"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      onClick={onClose}
+                    />
+                    <motion.div
+                      layoutRoot
+                      className="fixed inset-0 z-[2000] flex items-center justify-center p-8 cursor-zoom-out"
+                      onClick={onClose}
                     >
-                      {children}
+                      <motion.div
+                        layoutId={layoutId}
+                        layout
+                        layoutDependency={isOpen}
+                        ref={modalRef}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="Media preview"
+                        tabIndex={-1}
+                        className={cn(
+                          "relative overflow-hidden rounded-[var(--radius-card)] outline-none cursor-zoom-out transform-gpu",
+                          expandedClassName
+                        )}
+                        onKeyDown={handleModalKeyDown}
+                        onClick={(event) => event.stopPropagation()}
+                      >
+                        {children}
+                      </motion.div>
                     </motion.div>
-                  </motion.div>
-                </>
-              )}
-            </AnimatePresence>,
+                  </>
+                ) : null}
+              </AnimatePresence>
+            </dialog>,
             document.body
           )
         : null}

@@ -48,8 +48,8 @@ export function VideoCard({
     <>
       <div
         className={cn(
-          "relative flex flex-col transition-transform duration-300 ease-out transform-gpu origin-center",
-          !expandedId && "hover:scale-[1.02] hover:z-40",
+          "relative flex flex-col transition-transform duration-300 ease-out origin-center",
+          !expandedId && "transform-gpu hover:scale-[1.02] hover:z-40",
           className
         )}
       >
