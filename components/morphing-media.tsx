@@ -112,7 +112,7 @@ export function MorphingMedia({
 
   useEffect(() => {
     if (isOpen) {
-      pauseAll(triggerRef.current)
+      pauseAll(document.body)
       playAll(modalRef.current)
     } else {
       pauseAll(modalRef.current)

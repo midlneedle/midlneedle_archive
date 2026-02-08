@@ -33,7 +33,8 @@ export function VideoCard({
   const allowAutoplay = useVideoAutoplay()
 
   const isExpanded = expandedId === id
-  const shouldAutoplay = allowAutoplay || isExpanded
+  const hasExpandedMedia = expandedId !== null
+  const shouldAutoplay = isExpanded || (allowAutoplay && !hasExpandedMedia)
   const layoutId = `media-${id}`
 
   const handleOpen = () => {
