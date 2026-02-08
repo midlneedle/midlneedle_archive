@@ -60,6 +60,19 @@ midlneedle_archive/
 - 🔄 **View Transitions API** for smooth page transitions
 - 📱 **Responsive design**
 - 🚀 **Optimized for Vercel** (prefetching, image optimization, edge network)
+- 🧩 **Unified pixel sprite system** for title graphics and video loader
+
+---
+
+## 🧩 Pixel Graphics (Sprites)
+
+- Title graphics and video loader now use a shared SVG sprite renderer: `components/pixel-sprite.tsx`
+- Frame/tone data is centralized in `lib/pixel-sprite-data.ts`
+- Current consumers:
+  - `components/interactive-pixel.tsx`
+  - `components/pixel-loading-spinner.tsx`
+- Legacy CSS keyframe/box-shadow pixel animations were removed from `app/globals.css`
+- Benefits: less CSS complexity, one rendering path, easier tuning of frames and timing in TypeScript
 
 ---
 
