@@ -41,8 +41,6 @@ export function MorphingMedia({
     bodyPaddingRight: string
     bodyOverflow: string
     bodyOverscroll: string
-    htmlOverflow: string
-    htmlOverscroll: string
   } | null>(null)
   useEffect(() => {
     setMounted(true)
@@ -52,14 +50,15 @@ export function MorphingMedia({
   useLayoutEffect(() => {
     const body = document.body
     const root = document.documentElement
+
     const restoreScrollLock = () => {
       if (!scrollLockStyles.current) return
       const saved = scrollLockStyles.current
+
       body.style.paddingRight = saved.bodyPaddingRight
       body.style.overflow = saved.bodyOverflow
       body.style.overscrollBehavior = saved.bodyOverscroll
-      root.style.overflow = saved.htmlOverflow
-      root.style.overscrollBehavior = saved.htmlOverscroll
+
       scrollLockStyles.current = null
     }
 
@@ -69,20 +68,18 @@ export function MorphingMedia({
           bodyPaddingRight: body.style.paddingRight,
           bodyOverflow: body.style.overflow,
           bodyOverscroll: body.style.overscrollBehavior,
-          htmlOverflow: root.style.overflow,
-          htmlOverscroll: root.style.overscrollBehavior,
         }
       }
+
       const scrollbarWidth = Math.max(0, window.innerWidth - root.clientWidth)
       if (scrollbarWidth > 0) {
         const computedBodyPadding =
           Number.parseFloat(window.getComputedStyle(body).paddingRight) || 0
         body.style.paddingRight = `${computedBodyPadding + scrollbarWidth}px`
       }
+
       body.style.overflow = "hidden"
       body.style.overscrollBehavior = "none"
-      root.style.overflow = "hidden"
-      root.style.overscrollBehavior = "none"
     } else {
       restoreScrollLock()
     }
@@ -126,9 +123,27 @@ export function MorphingMedia({
   useEffect(() => {
     if (isOpen) {
       lastActiveRef.current = document.activeElement as HTMLElement
-      requestAnimationFrame(() => modalRef.current?.focus())
+      requestAnimationFrame(() => {
+        const dialog = modalRef.current
+        if (!dialog) return
+        try {
+          dialog.focus({ preventScroll: true })
+        } catch {
+          // Older Safari can scroll the page when focusing; skip fallback focus.
+        }
+      })
     } else if (wasOpenRef.current) {
-      lastActiveRef.current?.focus()
+      const target = lastActiveRef.current
+      if (target) {
+        try {
+          target.focus({ preventScroll: true })
+        } catch {
+          const scrollX = window.scrollX
+          const scrollY = window.scrollY
+          target.focus()
+          window.scrollTo(scrollX, scrollY)
+        }
+      }
     }
     wasOpenRef.current = isOpen
   }, [isOpen])
@@ -191,6 +206,7 @@ export function MorphingMedia({
       <motion.div
         layoutId={layoutId}
         layout
+        layoutDependency={isOpen}
         ref={triggerRef}
         className={cn(
           "relative overflow-clip transform-gpu",
@@ -218,27 +234,29 @@ export function MorphingMedia({
                     exit={{ opacity: 0 }}
                     onClick={onClose}
                   />
-                  <div
+                  <motion.div
+                    layoutRoot
                     className="fixed inset-0 z-50 flex items-center justify-center p-8 cursor-zoom-out"
                     onClick={onClose}
                   >
                     <motion.div
                       layoutId={layoutId}
                       layout
+                      layoutDependency={isOpen}
                       ref={modalRef}
                       role="dialog"
                       aria-modal="true"
                       aria-label="Media preview"
                       tabIndex={-1}
                       className={cn(
-                        "relative overflow-clip cursor-zoom-out transform-gpu",
+                        "relative overflow-hidden cursor-zoom-out transform-gpu",
                         expandedClassName
                       )}
                       onKeyDown={handleModalKeyDown}
                     >
                       {children}
                     </motion.div>
-                  </div>
+                  </motion.div>
                 </>
               )}
             </AnimatePresence>,

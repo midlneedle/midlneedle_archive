@@ -29,20 +29,17 @@ export function VideoCard({
   blurDataURL,
 }: VideoCardProps) {
   const id = useId()
-  const { hoveredId, expandedId, setHoveredId, setExpandedId } = useMedia()
+  const { expandedId, setExpandedId } = useMedia()
   const allowAutoplay = useVideoAutoplay()
 
-  const isHovered = hoveredId === id
   const isExpanded = expandedId === id
   const shouldAutoplay = allowAutoplay || isExpanded
   const layoutId = `media-${id}`
 
   const handleOpen = () => {
-    setHoveredId(null)
     setExpandedId(id)
   }
   const handleClose = () => {
-    setHoveredId(null)
     setExpandedId(null)
   }
 
@@ -51,12 +48,9 @@ export function VideoCard({
       <div
         className={cn(
           "relative flex flex-col transition-transform duration-300 ease-out transform-gpu origin-center",
-          isHovered && !expandedId && "scale-[1.02]",
-          isHovered && !expandedId && "z-40",
+          !expandedId && "hover:scale-[1.02] hover:z-40",
           className
         )}
-        onMouseEnter={() => !expandedId && setHoveredId(id)}
-        onMouseLeave={() => !expandedId && setHoveredId(null)}
       >
         <MorphingMedia
           layoutId={layoutId}
