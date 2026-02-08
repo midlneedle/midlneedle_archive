@@ -19,6 +19,7 @@ const TITLE_PIXEL_OFFSET_X_EM = 0.32
 const TITLE_PIXEL_OFFSET_Y_EM = 0.02
 const HOVER_FADE_KEEP_RATIOS = [1, 0.82, 0.66, 0.5, 0.36, 0.24, 0.12, 0.06, 0] as const
 const HOVER_FADE_TONE_SHIFT = [0, 0, 1, 1, 2, 2, 3, 3, 3] as const
+const HOVER_FADE_LAST_STEP = HOVER_FADE_KEEP_RATIOS.length - 1
 
 type HoverFadeState = "idle" | "fadingOut" | "hidden" | "fadingIn"
 
@@ -209,19 +210,9 @@ export function InteractivePixel({ variant }: InteractivePixelProps) {
       })
     }
 
-    const handleMouseEnter = () => {
-      setIsHovered(true)
-      if (isHoverCapable) {
-        setHoverFadeState("fadingOut")
-        setHoverFadeStep(0)
-      }
-    }
+    const handleMouseEnter = () => setIsHovered(true)
     const handleMouseLeave = () => {
       setIsHovered(false)
-      if (isHoverCapable) {
-        setHoverFadeState("fadingIn")
-        setHoverFadeStep(0)
-      }
       setTrails([])
       lastGridPosRef.current = ""
     }
@@ -273,6 +264,32 @@ export function InteractivePixel({ variant }: InteractivePixelProps) {
     () => buildHoverFadeFrames(TITLE_PIXEL_FRAMES[variant][0] ?? []),
     [variant]
   )
+
+  useEffect(() => {
+    if (!isHoverCapable) return
+
+    const maxStep = Math.max(HOVER_FADE_LAST_STEP, hoverFadeFrames.out.length - 1)
+    const reverseStep = maxStep - hoverFadeStep
+
+    if (isHovered) {
+      if (hoverFadeState === "idle") {
+        setHoverFadeState("fadingOut")
+        setHoverFadeStep(0)
+      } else if (hoverFadeState === "fadingIn") {
+        setHoverFadeState("fadingOut")
+        setHoverFadeStep(reverseStep)
+      }
+      return
+    }
+
+    if (hoverFadeState === "hidden") {
+      setHoverFadeState("fadingIn")
+      setHoverFadeStep(0)
+    } else if (hoverFadeState === "fadingOut") {
+      setHoverFadeState("fadingIn")
+      setHoverFadeStep(reverseStep)
+    }
+  }, [hoverFadeFrames.out.length, hoverFadeState, hoverFadeStep, isHoverCapable, isHovered])
 
   useEffect(() => {
     if (!isHoverCapable) return
