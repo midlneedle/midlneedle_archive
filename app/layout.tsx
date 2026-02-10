@@ -6,6 +6,7 @@ import { withBasePath } from '@/lib/base-path'
 import './globals.css'
 import { ScrollGradientOverlay } from '@/components/scroll-gradient-overlay'
 import { ScrollManager } from '@/components/scroll-manager'
+import { AgentationProvider } from '@/components/agentation-provider'
 
 export const dynamic = 'error'
 
@@ -82,6 +83,7 @@ export default function RootLayout({
         <ScrollGradientOverlay />
         {children}
         <Analytics />
+        <AgentationProvider />
       </body>
     </html>
   )

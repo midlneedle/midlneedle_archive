@@ -70,7 +70,7 @@ export function VideoCard({
         >
           <div
             className={cn(
-              "inner-stroke relative h-full w-full overflow-hidden rounded-[var(--radius-card)] border border-transparent"
+              "stroke relative h-full w-full overflow-hidden rounded-[var(--radius-card)]"
             )}
             style={{ backgroundColor: blurDataURL || "#000" }}
           >

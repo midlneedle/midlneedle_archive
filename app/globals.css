@@ -28,7 +28,8 @@
   --color-foreground: var(--foreground);
   --color-foreground-light: var(--muted-foreground);
   --color-muted-foreground: var(--muted-foreground);
-  --color-border: var(--border);
+  --color-border: var(--stroke);
+  --color-stroke: var(--stroke);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
@@ -60,10 +61,10 @@
   --background: #ffffff;
   --foreground: #353b42;
   --muted-foreground: #5d6268;
-  --border: #D7D8D9;
+  --stroke: rgb(53 59 66 / 0.2);
+  --border: var(--stroke);
   --card: #ffffff;
   --card-foreground: var(--foreground);
-  --inner-stroke: rgb(53 59 66 / 0.4);
   --radius: 0;
   --space-page-x: 64px;
   --space-page-y: 128px;
@@ -92,7 +93,8 @@
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --muted-foreground: oklch(0.708 0 0);
-  --border: oklch(0.269 0 0);
+  --stroke: oklch(0.269 0 0);
+  --border: var(--stroke);
   --card: oklch(0.145 0 0);
   --card-foreground: oklch(0.985 0 0);
 }
@@ -228,18 +230,17 @@ article {
   .framed > figure > span:first-child {
     padding: var(--frame-padding, 0.875rem);
     background: var(--frame-background, #fff);
-    border: 1px solid var(--border);
+    box-shadow: inset 0 0 0 1px var(--stroke);
   }
   iframe {
     width: 100%;
-    border: 1px solid var(--border);
+    box-shadow: inset 0 0 0 1px var(--stroke);
     background-color: #fff;
   }
   details {
     margin-top: 1.75rem;
     padding: 0.5rem 0;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
+    box-shadow: inset 0 1px 0 var(--stroke), inset 0 -1px 0 var(--stroke);
   }
   details summary {
     font-variation-settings: 'wght' 600, var(--sans-variation);
@@ -299,17 +300,16 @@ html {
     @apply border-border;
   }
 
-  .inner-stroke {
+  .stroke {
     position: relative;
   }
 
-  .inner-stroke::after {
+  .stroke::after {
     content: "";
     position: absolute;
     inset: 0;
-    border: 1px solid var(--inner-stroke);
+    box-shadow: inset 0 0 0 1px var(--stroke);
     border-radius: inherit;
-    box-sizing: border-box;
     pointer-events: none;
   }
 
@@ -525,16 +525,65 @@ html {
 
   /* Focus states */
   :focus-visible {
-    outline: 2px solid var(--border);
+    outline: 2px solid var(--stroke);
     outline-offset: 2px;
   }
 
 }
 
+/* ========================================
+   Cases List
+   ======================================== */
+
+.cases-list:has(.cases-item:hover) .cases-item-title {
+  color: var(--muted-foreground);
+}
+
+.cases-list:has(.cases-item:hover) .cases-item:hover .cases-item-title {
+  color: var(--foreground);
+}
+
+.cases-list > .cases-item + .cases-item {
+  box-shadow: inset 0 1px 0 var(--stroke);
+}
 
 /* ========================================
    Custom Scrollbar
    ======================================== */
+
+/* ========================================
+   Agentation Font Overrides
+   ======================================== */
+
+[data-feedback-toolbar],
+[data-feedback-toolbar] *,
+[data-annotation-popup],
+[data-annotation-popup] * {
+  font-family: var(--sans), system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
+    'Helvetica Neue', sans-serif !important;
+  letter-spacing: normal !important;
+  word-spacing: normal !important;
+}
+
+[data-feedback-toolbar] code,
+[data-feedback-toolbar] pre,
+[data-feedback-toolbar] kbd,
+[data-feedback-toolbar] samp,
+[data-annotation-popup] code,
+[data-annotation-popup] pre,
+[data-annotation-popup] kbd,
+[data-annotation-popup] samp {
+  font-family: var(--mono), ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, 'Liberation Mono', 'Courier New', monospace !important;
+}
+
+[data-feedback-toolbar] svg text,
+[data-annotation-popup] svg text {
+  font-family: var(--sans), system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
+    'Helvetica Neue', sans-serif !important;
+}
 
 ::-webkit-scrollbar {
   width: 8px;
@@ -546,7 +595,7 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border);
+  background: var(--stroke);
   border-radius: 9999px;
 }
 

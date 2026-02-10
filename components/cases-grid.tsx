@@ -4,6 +4,7 @@ import Link from 'next/link'
 
 interface CaseItem {
   title: string
+  date: string
   href?: string
 }
 
@@ -11,29 +12,32 @@ interface CasesGridProps {
   cases: CaseItem[]
 }
 
-function CaseCard({ title, href }: CaseItem) {
+function CaseCard({ title, date, href }: CaseItem) {
   const content = (
-    <div className="flex h-full w-full flex-col justify-end gap-1 p-[var(--space-inset)]">
-      <span className="type-card-title text-foreground">{title}</span>
+    <div className="flex w-full items-baseline justify-between py-[calc(var(--space-text)*0.4)]">
+      <span className="cases-item-title type-card-title text-foreground transition-colors duration-200">
+        {title}
+      </span>
+      <span className="type-card-title text-muted-foreground transition-colors duration-200 group-hover/item:text-foreground">
+        {date}
+      </span>
     </div>
   )
 
-  return (
-    <div className="inner-stroke aspect-video w-full overflow-hidden rounded-[var(--radius-card)] border border-transparent bg-card transition-transform duration-300 ease-out transform-gpu hover:scale-[1.02]">
-      {href ? (
-        <Link href={href} prefetch={true} className="block h-full w-full">
-          {content}
-        </Link>
-      ) : (
-        content
-      )}
+  return href ? (
+    <Link href={href} prefetch={true} className="cases-item group/item block w-full">
+      {content}
+    </Link>
+  ) : (
+    <div className="cases-item group/item">
+      {content}
     </div>
   )
 }
 
 export function CasesGrid({ cases }: CasesGridProps) {
   return (
-    <div className="flex flex-col gap-[var(--space-stack)]">
+    <div className="cases-list group/list flex flex-col">
       {cases.map((item, index) => (
         <CaseCard key={`${item.title}-${index}`} {...item} />
       ))}
