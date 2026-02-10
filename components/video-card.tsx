@@ -80,6 +80,7 @@ export function VideoCard({
             <OptimizedVideoPlayer
               src={src}
               shouldAutoplay={shouldAutoplay}
+              playbackSyncKey={layoutId}
               className="relative h-full w-full"
             />
           </div>
