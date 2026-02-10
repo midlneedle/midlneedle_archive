@@ -29,12 +29,13 @@ export function VideoCard({
   blurDataURL,
 }: VideoCardProps) {
   const id = useId()
-  const { expandedId, setExpandedId } = useMedia()
+  const { expandedId, isClosing, setExpandedId } = useMedia()
   const allowAutoplay = useVideoAutoplay()
 
   const isExpanded = expandedId === id
   const hasExpandedMedia = expandedId !== null
-  const shouldAutoplay = isExpanded || (allowAutoplay && !hasExpandedMedia)
+  const shouldAutoplay =
+    isExpanded || (allowAutoplay && !hasExpandedMedia && !isClosing)
   const layoutId = `media-${id}`
 
   const handleOpen = () => {
@@ -59,7 +60,9 @@ export function VideoCard({
           onClose={handleClose}
           triggerClassName={cn(
             "cursor-zoom-in mb-[var(--space-inset)]",
-            !expandedId && "transition-transform duration-300 ease-out hover:scale-[1.02]",
+            !expandedId &&
+              !isClosing &&
+              "transition-transform duration-300 ease-out hover:scale-[1.02]",
             orientation === "vertical" ? "aspect-[9/16]" : "aspect-video"
           )}
           expandedClassName={cn(
@@ -79,19 +82,6 @@ export function VideoCard({
               shouldAutoplay={shouldAutoplay}
               className="relative h-full w-full"
             />
-            {!shouldAutoplay && (
-              <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/85 text-black shadow-sm backdrop-blur-sm">
-                  <svg
-                    aria-hidden="true"
-                    viewBox="0 0 24 24"
-                    className="h-6 w-6 translate-x-[1px] fill-current"
-                  >
-                    <path d="M8 5.5v13l11-6.5-11-6.5z" />
-                  </svg>
-                </div>
-              </div>
-            )}
           </div>
         </MorphingMedia>
         <div>

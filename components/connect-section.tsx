@@ -72,6 +72,15 @@ export function ConnectSection() {
           className={linkStyle}
         >
           Threads
+        </a>
+        ,{" "}
+        <a
+          href="https://github.com/midlneedle"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={linkStyle}
+        >
+          GitHub
         </a>{" "}
         and{" "}
         <a

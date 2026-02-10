@@ -1,12 +1,13 @@
 "use client"
 
 import {
-  useCallback,
   useEffect,
   useLayoutEffect,
   useRef,
+  useState,
   useSyncExternalStore,
   type KeyboardEvent as ReactKeyboardEvent,
+  type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from "react"
 import { createPortal } from "react-dom"
@@ -41,33 +42,14 @@ export function MorphingMedia({
   const isHydrated = useIsHydrated()
   const triggerRef = useRef<HTMLDivElement | null>(null)
   const modalRef = useRef<HTMLDivElement | null>(null)
-  const dialogRef = useRef<HTMLDialogElement | null>(null)
   const lastActiveRef = useRef<HTMLElement | null>(null)
   const wasOpenRef = useRef(false)
+  const [isOverlayActive, setIsOverlayActive] = useState(isOpen)
   const scrollLockStyles = useRef<{
     bodyPaddingRight: string
     bodyOverflow: string
     bodyOverscroll: string
   } | null>(null)
-
-  const showTopLayerDialog = useCallback(() => {
-    const dialog = dialogRef.current
-    if (!dialog || dialog.open) return
-
-    try {
-      dialog.showModal()
-    } catch {
-      requestAnimationFrame(() => {
-        const current = dialogRef.current
-        if (!current || current.open) return
-        try {
-          current.showModal()
-        } catch {
-          // Keep graceful behavior if browser blocks modal promotion.
-        }
-      })
-    }
-  }, [])
 
   useLayoutEffect(() => {
     const body = document.body
@@ -84,7 +66,7 @@ export function MorphingMedia({
       scrollLockStyles.current = null
     }
 
-    if (isOpen) {
+    if (isOverlayActive) {
       if (!scrollLockStyles.current) {
         scrollLockStyles.current = {
           bodyPaddingRight: body.style.paddingRight,
@@ -108,44 +90,7 @@ export function MorphingMedia({
     return () => {
       restoreScrollLock()
     }
-  }, [isOpen])
-
-  useLayoutEffect(() => {
-    if (!isOpen) return
-    showTopLayerDialog()
-  }, [isOpen, showTopLayerDialog])
-
-  const pauseAll = useCallback((root: HTMLElement | null) => {
-    if (!root) return
-    root.querySelectorAll("video").forEach((video) => {
-      try {
-        video.pause()
-      } catch {
-        // Ignore pause errors for unsupported media states.
-      }
-    })
-  }, [])
-
-  const playAll = useCallback((root: HTMLElement | null) => {
-    if (!root) return
-    root.querySelectorAll("video").forEach((video) => {
-      if (video.dataset.autoplay === "false") return
-      const maybePromise = video.play()
-      if (maybePromise && typeof maybePromise.catch === "function") {
-        maybePromise.catch(() => {})
-      }
-    })
-  }, [])
-
-  useEffect(() => {
-    if (isOpen) {
-      pauseAll(document.body)
-      playAll(modalRef.current)
-    } else {
-      pauseAll(modalRef.current)
-      requestAnimationFrame(() => playAll(triggerRef.current))
-    }
-  }, [isOpen, pauseAll, playAll])
+  }, [isOverlayActive])
 
   useEffect(() => {
     if (isOpen) {
@@ -194,8 +139,9 @@ export function MorphingMedia({
   }
 
   const handleOpen = () => {
+    if (isOpen) return
     lastActiveRef.current = document.activeElement as HTMLElement
-    showTopLayerDialog()
+    setIsOverlayActive(true)
     onOpen()
   }
 
@@ -229,45 +175,46 @@ export function MorphingMedia({
     }
   }
 
+  const handleClosePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+    event.preventDefault()
+    event.stopPropagation()
+    onClose()
+  }
+
   return (
     <MotionConfig transition={{ duration: 0.3, ease: "easeInOut" }}>
       <motion.div
         layoutId={layoutId}
         layout
+        layoutCrossfade={false}
         layoutDependency={isOpen}
         ref={triggerRef}
         className={cn(
           "relative overflow-clip transform-gpu outline-none focus-visible:outline-none",
-          isOpen && "pointer-events-none",
+          isOverlayActive && "pointer-events-none",
           triggerClassName
         )}
         role="button"
         tabIndex={0}
         aria-haspopup="dialog"
         aria-expanded={isOpen}
+        onPointerDown={(event) => {
+          if (event.button !== 0) return
+          handleOpen()
+        }}
         onClick={handleOpen}
         onKeyDown={handleTriggerKeyDown}
       >
         {children}
       </motion.div>
-      {isHydrated
+      {isHydrated && isOverlayActive
         ? createPortal(
-            <dialog
-              ref={dialogRef}
-              className="morphing-media-dialog fixed inset-0 m-0 h-screen w-screen max-h-none max-w-none overflow-visible bg-transparent p-0 text-inherit"
-              style={{ border: "none" }}
-              onCancel={(event) => {
-                event.preventDefault()
-                onClose()
-              }}
-            >
+            <div className="fixed inset-0 z-[70]">
               <AnimatePresence
-                initial={false}
                 mode="sync"
                 onExitComplete={() => {
-                  const dialog = dialogRef.current
-                  if (!isOpen && dialog?.open) {
-                    dialog.close()
+                  if (!isOpen) {
+                    setIsOverlayActive(false)
                   }
                 }}
               >
@@ -276,18 +223,25 @@ export function MorphingMedia({
                     <motion.div
                       className="fixed inset-0 bg-white/95 cursor-zoom-out"
                       initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      onClick={onClose}
+                      animate={{
+                        opacity: 1,
+                        transition: { duration: 0.34, ease: "easeOut" },
+                      }}
+                      exit={{
+                        opacity: 0,
+                        transition: { duration: 0.22, ease: "easeInOut" },
+                      }}
+                      onPointerDown={handleClosePointerDown}
                     />
                     <motion.div
                       layoutRoot
                       className="fixed inset-0 flex items-center justify-center p-8 cursor-zoom-out"
-                      onClick={onClose}
+                      onPointerDown={handleClosePointerDown}
                     >
                       <motion.div
                         layoutId={layoutId}
                         layout
+                        layoutCrossfade={false}
                         layoutDependency={isOpen}
                         ref={modalRef}
                         role="dialog"
@@ -299,7 +253,7 @@ export function MorphingMedia({
                           expandedClassName
                         )}
                         onKeyDown={handleModalKeyDown}
-                        onClick={(event) => event.stopPropagation()}
+                        onPointerDown={handleClosePointerDown}
                       >
                         {children}
                       </motion.div>
@@ -307,7 +261,7 @@ export function MorphingMedia({
                   </>
                 ) : null}
               </AnimatePresence>
-            </dialog>,
+            </div>,
             document.body
           )
         : null}
