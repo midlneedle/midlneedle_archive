@@ -5,7 +5,6 @@ import cn from 'clsx'
 import { withBasePath } from '@/lib/base-path'
 import './globals.css'
 import { ScrollGradientOverlay } from '@/components/scroll-gradient-overlay'
-import { ScrollManager } from '@/components/scroll-manager'
 import { AgentationProvider } from '@/components/agentation-provider'
 
 export const dynamic = 'error'
@@ -59,7 +58,6 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  maximumScale: 1,
   colorScheme: 'only light',
   themeColor: '#ffffff',
 }
@@ -79,7 +77,6 @@ export default function RootLayout({
         'text-foreground',
         'antialiased'
       )}>
-        <ScrollManager />
         <ScrollGradientOverlay />
         {children}
         <Analytics />

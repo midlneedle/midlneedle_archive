@@ -15,12 +15,6 @@ const videos = {
   cummera: withBasePath("/videos/cummera.mp4"),
   winxp: withBasePath("/videos/winxp.mp4"),
 }
-const icons = {
-  playground: withBasePath("/resourses/icons/playground.png"),
-  cases: withBasePath("/resourses/icons/casses.png"),
-  connect: withBasePath("/resourses/icons/connect.png"),
-  vladislav: withBasePath("/resourses/icons/vladislav.png"),
-}
 
 export default function Home() {
   return (

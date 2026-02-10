@@ -16,17 +16,16 @@ export function OptimizedVideoPlayer({
 }: OptimizedVideoPlayerProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
-  const [shouldLoad, setShouldLoad] = useState(false)
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false)
-  const [isSafari, setIsSafari] = useState(false)
-  const [hasPlaybackIssue, setHasPlaybackIssue] = useState(false)
-
-  useEffect(() => {
-    const ua = navigator.userAgent
-    setIsSafari(
-      /Safari/i.test(ua) && !/(Chrome|Chromium|CriOS|Edg|OPR|Firefox|FxiOS)/i.test(ua)
-    )
-  }, [])
+  const [hasIntersected, setHasIntersected] = useState(false)
+  const [loadedSrc, setLoadedSrc] = useState<string | null>(null)
+  const [playbackIssueSrc, setPlaybackIssueSrc] = useState<string | null>(null)
+  const shouldLoad = shouldAutoplay || hasIntersected
+  const isVideoLoaded = loadedSrc === src
+  const hasPlaybackIssue = playbackIssueSrc === src
+  const isSafari =
+    typeof navigator !== "undefined" &&
+    /Safari/i.test(navigator.userAgent) &&
+    !/(Chrome|Chromium|CriOS|Edg|OPR|Firefox|FxiOS)/i.test(navigator.userAgent)
 
   useEffect(() => {
     if (shouldLoad) return
@@ -37,7 +36,7 @@ export function OptimizedVideoPlayer({
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0]?.isIntersecting) {
-          setShouldLoad(true)
+          setHasIntersected(true)
           observer.disconnect()
         }
       },
@@ -50,18 +49,6 @@ export function OptimizedVideoPlayer({
     observer.observe(container)
     return () => observer.disconnect()
   }, [shouldLoad])
-
-  useEffect(() => {
-    if (shouldAutoplay) {
-      setShouldLoad(true)
-    }
-  }, [shouldAutoplay])
-
-  useEffect(() => {
-    if (!shouldLoad) return
-    setIsVideoLoaded(false)
-    setHasPlaybackIssue(false)
-  }, [shouldLoad, src])
 
   useEffect(() => {
     if (!shouldLoad) return
@@ -94,7 +81,8 @@ export function OptimizedVideoPlayer({
       if (!video) return
 
       if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
-        setIsVideoLoaded(true)
+        setLoadedSrc(src)
+        setPlaybackIssueSrc(null)
         return
       }
 
@@ -107,8 +95,8 @@ export function OptimizedVideoPlayer({
           }
         }
       } catch {
-        setHasPlaybackIssue(true)
-        setIsVideoLoaded(true)
+        setPlaybackIssueSrc(src)
+        setLoadedSrc(src)
       }
     }, 2500)
 
@@ -116,8 +104,8 @@ export function OptimizedVideoPlayer({
   }, [hasPlaybackIssue, isSafari, isVideoLoaded, shouldAutoplay, shouldLoad, src])
 
   const markLoaded = () => {
-    setIsVideoLoaded(true)
-    setHasPlaybackIssue(false)
+    setLoadedSrc(src)
+    setPlaybackIssueSrc(null)
   }
 
   const handleStall = () => {
@@ -129,8 +117,8 @@ export function OptimizedVideoPlayer({
   }
 
   const handleError = () => {
-    setHasPlaybackIssue(true)
-    setIsVideoLoaded(true)
+    setPlaybackIssueSrc(src)
+    setLoadedSrc(src)
   }
 
   return (

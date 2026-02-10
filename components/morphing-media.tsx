@@ -5,13 +5,19 @@ import {
   useEffect,
   useLayoutEffect,
   useRef,
-  useState,
+  useSyncExternalStore,
   type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
 } from "react"
 import { createPortal } from "react-dom"
 import { AnimatePresence, MotionConfig, motion } from "motion/react"
 import { cn } from "@/lib/utils"
+
+const subscribeHydration = () => () => {}
+
+function useIsHydrated() {
+  return useSyncExternalStore(subscribeHydration, () => true, () => false)
+}
 
 interface MorphingMediaProps {
   layoutId: string
@@ -32,22 +38,17 @@ export function MorphingMedia({
   expandedClassName,
   children,
 }: MorphingMediaProps) {
-  const [mounted, setMounted] = useState(false)
+  const isHydrated = useIsHydrated()
   const triggerRef = useRef<HTMLDivElement | null>(null)
   const modalRef = useRef<HTMLDivElement | null>(null)
   const dialogRef = useRef<HTMLDialogElement | null>(null)
   const lastActiveRef = useRef<HTMLElement | null>(null)
   const wasOpenRef = useRef(false)
-  const [isModalVisible, setIsModalVisible] = useState(false)
   const scrollLockStyles = useRef<{
     bodyPaddingRight: string
     bodyOverflow: string
     bodyOverscroll: string
   } | null>(null)
-  useEffect(() => {
-    setMounted(true)
-    return () => setMounted(false)
-  }, [])
 
   const showTopLayerDialog = useCallback(() => {
     const dialog = dialogRef.current
@@ -110,24 +111,9 @@ export function MorphingMedia({
   }, [isOpen])
 
   useLayoutEffect(() => {
-    if (!mounted) return
-    if (isOpen) {
-      setIsModalVisible(true)
-      showTopLayerDialog()
-      return
-    }
-
-    setIsModalVisible(false)
-  }, [isOpen, mounted, showTopLayerDialog])
-
-  useEffect(() => {
-    return () => {
-      const dialog = dialogRef.current
-      if (dialog?.open) {
-        dialog.close()
-      }
-    }
-  }, [])
+    if (!isOpen) return
+    showTopLayerDialog()
+  }, [isOpen, showTopLayerDialog])
 
   const pauseAll = useCallback((root: HTMLElement | null) => {
     if (!root) return
@@ -209,7 +195,6 @@ export function MorphingMedia({
 
   const handleOpen = () => {
     lastActiveRef.current = document.activeElement as HTMLElement
-    setIsModalVisible(true)
     showTopLayerDialog()
     onOpen()
   }
@@ -265,7 +250,7 @@ export function MorphingMedia({
       >
         {children}
       </motion.div>
-      {mounted
+      {isHydrated
         ? createPortal(
             <dialog
               ref={dialogRef}
@@ -286,7 +271,7 @@ export function MorphingMedia({
                   }
                 }}
               >
-                {isModalVisible ? (
+                {isOpen ? (
                   <>
                     <motion.div
                       className="fixed inset-0 bg-white/95 cursor-zoom-out"

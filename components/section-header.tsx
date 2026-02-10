@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { InteractivePixel } from "./interactive-pixel"
 
 interface SectionHeaderProps {
@@ -21,7 +22,13 @@ export function SectionHeader({
       ) : null}
       {iconSrc ? (
         <span className="pointer-events-none ml-0 translate-x-0 opacity-0 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-x-[0.2em]">
-          <img src={iconSrc} alt={iconAlt} className="h-[1em] w-[1em]" />
+          <Image
+            src={iconSrc}
+            alt={iconAlt}
+            width={16}
+            height={16}
+            className="h-[1em] w-[1em]"
+          />
         </span>
       ) : null}
     </h2>

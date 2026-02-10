@@ -39,25 +39,22 @@ export function PixelSprite({
   style,
 }: PixelSpriteProps) {
   const prefersReducedMotion = usePrefersReducedMotion()
-  const [frameIndex, setFrameIndex] = useState(0)
+  const [frameTick, setFrameTick] = useState(0)
+  const shouldAnimate = !paused && !prefersReducedMotion && frames.length > 1
 
   useEffect(() => {
-    const shouldAnimate = !paused && !prefersReducedMotion && frames.length > 1
-    if (!shouldAnimate) {
-      setFrameIndex(0)
-      return
-    }
+    if (!shouldAnimate) return
     const interval = window.setInterval(() => {
-      setFrameIndex((prev) => (prev + 1) % frames.length)
+      setFrameTick((prev) => prev + 1)
     }, frameDurationMs)
     return () => window.clearInterval(interval)
-  }, [frames.length, frameDurationMs, paused, prefersReducedMotion])
+  }, [shouldAnimate, frameDurationMs])
 
-  const currentFrame = frames[frameIndex] ?? []
-  const points = useMemo(
-    () => [...currentFrame, ...overlayPoints, ...framePoints],
-    [currentFrame, overlayPoints, framePoints]
-  )
+  const frameIndex = shouldAnimate ? frameTick % frames.length : 0
+  const points = useMemo(() => {
+    const currentFrame = frames[frameIndex] ?? []
+    return [...currentFrame, ...overlayPoints, ...framePoints]
+  }, [frameIndex, framePoints, frames, overlayPoints])
 
   const spriteStyle = {
     "--pixel-dark": tones.dark,

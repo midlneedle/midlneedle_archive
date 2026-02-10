@@ -6,6 +6,7 @@
   margin-top: var(--article-meta-gap);
   color: var(--stroke);
 }
+
 .sectionTitle {
   margin-top: var(--article-paragraph-gap);
   margin-bottom: var(--article-title-gap);
