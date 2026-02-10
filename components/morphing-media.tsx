@@ -192,6 +192,7 @@ export function MorphingMedia({
         className={cn(
           "relative overflow-clip transform-gpu outline-none focus-visible:outline-none",
           isOverlayActive && "pointer-events-none",
+          isOverlayActive && "z-[80]",
           triggerClassName
         )}
         role="button"
