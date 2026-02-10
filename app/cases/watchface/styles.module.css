@@ -3,7 +3,7 @@
 }
 
 .meta {
-  margin-top: calc(var(--space-text) * -0.2);
+  margin-top: var(--article-meta-gap);
   color: var(--inner-stroke);
 }
 .sectionTitle {
@@ -48,7 +48,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-block: var(--article-paragraph-gap);
+  margin-block: var(--article-media-gap);
   border: 1px solid var(--border);
   border-radius: var(--radius-card);
   background: var(--card);

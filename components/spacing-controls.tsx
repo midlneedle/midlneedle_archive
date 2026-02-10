@@ -81,6 +81,8 @@ const defaults = {
   articleParagraphGap: 44,
   articleTitleGap: 18,
   articleInnerGap: 18,
+  articleMetaGap: 8,
+  articleMediaGap: 32,
 }
 
 const typeConfigs = [
@@ -163,6 +165,8 @@ function buildArticleSpacingSpecs(values: typeof defaults) {
     paragraphGap: values.articleParagraphGap,
     titleGap: values.articleTitleGap,
     innerGap: values.articleInnerGap,
+    metaGap: values.articleMetaGap,
+    mediaGap: values.articleMediaGap,
   }
   return JSON.stringify(payload, null, 2)
 }
@@ -283,6 +287,20 @@ export function SpacingControls() {
           step: 1,
           label: "Inner gap (px)"
         },
+        articleMetaGap: {
+          value: defaults.articleMetaGap,
+          min: 0,
+          max: 120,
+          step: 1,
+          label: "Meta gap (px)"
+        },
+        articleMediaGap: {
+          value: defaults.articleMediaGap,
+          min: 0,
+          max: 120,
+          step: 1,
+          label: "Media gap (px)"
+        },
         copyArticleSpacing: button(() => copyToClipboard(buildArticleSpacingSpecs(valuesRef.current))),
       }),
     }),
@@ -378,6 +396,8 @@ export function SpacingControls() {
     root.style.setProperty("--article-paragraph-gap", `${values.articleParagraphGap}px`)
     root.style.setProperty("--article-title-gap", `${values.articleTitleGap}px`)
     root.style.setProperty("--article-inner-gap", `${values.articleInnerGap}px`)
+    root.style.setProperty("--article-meta-gap", `${values.articleMetaGap}px`)
+    root.style.setProperty("--article-media-gap", `${values.articleMediaGap}px`)
     root.style.setProperty("--foreground", values.foreground)
     root.style.setProperty("--muted-foreground", values.mutedForeground)
     root.style.setProperty("--background", values.background)

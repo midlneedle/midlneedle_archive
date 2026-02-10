@@ -90,7 +90,7 @@ export default function PageClient({ title, blocks, footnotes }: PageClientProps
     <main className="min-h-screen bg-background">
         <div className="mx-auto max-w-2xl">
           <section>
-            <header className="flex flex-col gap-[var(--space-text)]">
+            <header className="flex flex-col">
               <h2 className="type-title text-foreground">
                 {title}
               </h2>
