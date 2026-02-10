@@ -4,7 +4,6 @@ import { Analytics } from '@vercel/analytics/next'
 import cn from 'clsx'
 import { withBasePath } from '@/lib/base-path'
 import './globals.css'
-import { SpacingControls } from '@/components/spacing-controls'
 import { ScrollGradientOverlay } from '@/components/scroll-gradient-overlay'
 import { ScrollManager } from '@/components/scroll-manager'
 
@@ -82,7 +81,6 @@ export default function RootLayout({
         <ScrollManager />
         <ScrollGradientOverlay />
         {children}
-        <SpacingControls />
         <Analytics />
       </body>
     </html>
