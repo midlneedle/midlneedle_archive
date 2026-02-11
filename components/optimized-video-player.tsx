@@ -1,7 +1,20 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useSyncExternalStore } from "react"
 import { PixelLoadingSpinner } from "./pixel-loading-spinner"
+
+const subscribeHydration = () => () => {}
+
+function useIsHydrated() {
+  return useSyncExternalStore(subscribeHydration, () => true, () => false)
+}
+
+function isSafariUserAgent(userAgent: string) {
+  return (
+    /Safari/i.test(userAgent) &&
+    !/(Chrome|Chromium|CriOS|Edg|OPR|Firefox|FxiOS)/i.test(userAgent)
+  )
+}
 
 interface OptimizedVideoPlayerProps {
   src: string
@@ -16,6 +29,7 @@ export function OptimizedVideoPlayer({
   keepMounted = false,
   className,
 }: OptimizedVideoPlayerProps) {
+  const isHydrated = useIsHydrated()
   const containerRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const [hasIntersected, setHasIntersected] = useState(false)
@@ -31,9 +45,9 @@ export function OptimizedVideoPlayer({
     isVideoLoaded ||
     hasPlaybackIssue
   const isSafari =
+    isHydrated &&
     typeof navigator !== "undefined" &&
-    /Safari/i.test(navigator.userAgent) &&
-    !/(Chrome|Chromium|CriOS|Edg|OPR|Firefox|FxiOS)/i.test(navigator.userAgent)
+    isSafariUserAgent(navigator.userAgent)
 
   useEffect(() => {
     if (shouldLoad || shouldRenderVideo) return
