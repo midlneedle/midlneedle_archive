@@ -65,11 +65,7 @@ export function VideoCard({
               "transition-transform duration-300 ease-out hover:scale-[1.02]",
             orientation === "vertical" ? "aspect-[9/16]" : "aspect-video"
           )}
-          expandedClassName={cn(
-            orientation === "vertical"
-              ? "h-[80vh] aspect-[9/16]"
-              : "w-[80vw] max-w-6xl aspect-video"
-          )}
+          expandedVariant={orientation}
         >
           <div
             className={cn(
@@ -80,7 +76,7 @@ export function VideoCard({
             <OptimizedVideoPlayer
               src={src}
               shouldAutoplay={shouldAutoplay}
-              playbackSyncKey={layoutId}
+              keepMounted={isExpanded || isClosing}
               className="relative h-full w-full"
             />
           </div>

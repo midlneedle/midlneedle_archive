@@ -1,6 +1,7 @@
 "use client"
 
 import {
+  useCallback,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -11,14 +12,25 @@ import {
   type ReactNode,
 } from "react"
 import { createPortal } from "react-dom"
-import { AnimatePresence, MotionConfig, motion } from "motion/react"
+import { MotionConfig, motion } from "motion/react"
 import { cn } from "@/lib/utils"
 
 const subscribeHydration = () => () => {}
+const OVERLAY_PADDING = 32
+const MAX_HORIZONTAL_WIDTH_REM = 72
 
 function useIsHydrated() {
   return useSyncExternalStore(subscribeHydration, () => true, () => false)
 }
+
+type Rect = {
+  top: number
+  left: number
+  width: number
+  height: number
+}
+
+type ExpandedVariant = "vertical" | "horizontal"
 
 interface MorphingMediaProps {
   layoutId: string
@@ -26,8 +38,62 @@ interface MorphingMediaProps {
   onOpen: () => void
   onClose: () => void
   triggerClassName?: string
-  expandedClassName?: string
+  expandedVariant?: ExpandedVariant
   children: ReactNode
+}
+
+function toRect(rect: DOMRect): Rect {
+  return {
+    top: rect.top,
+    left: rect.left,
+    width: rect.width,
+    height: rect.height,
+  }
+}
+
+function getExpandedRect(variant: ExpandedVariant): Rect {
+  const viewportWidth = window.innerWidth
+  const viewportHeight = window.innerHeight
+  const availableWidth = Math.max(viewportWidth - OVERLAY_PADDING * 2, 0)
+  const availableHeight = Math.max(viewportHeight - OVERLAY_PADDING * 2, 0)
+
+  let width = 0
+  let height = 0
+
+  if (variant === "vertical") {
+    height = Math.min(viewportHeight * 0.8, availableHeight)
+    width = (height * 9) / 16
+    if (width > availableWidth) {
+      width = availableWidth
+      height = (width * 16) / 9
+    }
+  } else {
+    const rootFontSize =
+      Number.parseFloat(
+        window.getComputedStyle(document.documentElement).fontSize
+      ) || 16
+    const maxHorizontalWidth = MAX_HORIZONTAL_WIDTH_REM * rootFontSize
+    width = Math.min(viewportWidth * 0.8, availableWidth, maxHorizontalWidth)
+    height = (width * 9) / 16
+    if (height > availableHeight) {
+      height = availableHeight
+      width = (height * 16) / 9
+    }
+  }
+
+  return {
+    top: (viewportHeight - height) / 2,
+    left: (viewportWidth - width) / 2,
+    width,
+    height,
+  }
+}
+
+const INLINE_RECT = {
+  top: 0,
+  left: 0,
+  width: "100%",
+  height: "100%",
 }
 
 export function MorphingMedia({
@@ -36,20 +102,35 @@ export function MorphingMedia({
   onOpen,
   onClose,
   triggerClassName,
-  expandedClassName,
+  expandedVariant = "horizontal",
   children,
 }: MorphingMediaProps) {
   const isHydrated = useIsHydrated()
   const triggerRef = useRef<HTMLDivElement | null>(null)
-  const modalRef = useRef<HTMLDivElement | null>(null)
+  const mediaRef = useRef<HTMLDivElement | null>(null)
   const lastActiveRef = useRef<HTMLElement | null>(null)
   const wasOpenRef = useRef(false)
   const [isOverlayActive, setIsOverlayActive] = useState(isOpen)
+  const [floatingRect, setFloatingRect] = useState<Rect | null>(null)
+  const [isEnteringOverlay, setIsEnteringOverlay] = useState(false)
   const scrollLockStyles = useRef<{
     bodyPaddingRight: string
     bodyOverflow: string
     bodyOverscroll: string
   } | null>(null)
+
+  const getTriggerRect = useCallback(() => {
+    const trigger = triggerRef.current
+    if (!trigger) return null
+    const rect = trigger.getBoundingClientRect()
+    if (rect.width === 0 || rect.height === 0) return null
+    return toRect(rect)
+  }, [])
+
+  const getTargetRect = useCallback(
+    () => getExpandedRect(expandedVariant),
+    [expandedVariant]
+  )
 
   useLayoutEffect(() => {
     const body = document.body
@@ -87,6 +168,7 @@ export function MorphingMedia({
     } else {
       restoreScrollLock()
     }
+
     return () => {
       restoreScrollLock()
     }
@@ -96,10 +178,10 @@ export function MorphingMedia({
     if (isOpen) {
       lastActiveRef.current = document.activeElement as HTMLElement
       requestAnimationFrame(() => {
-        const dialog = modalRef.current
-        if (!dialog) return
+        const preview = mediaRef.current
+        if (!preview) return
         try {
-          dialog.focus({ preventScroll: true })
+          preview.focus({ preventScroll: true })
         } catch {
           // Older Safari can scroll the page when focusing; skip fallback focus.
         }
@@ -131,6 +213,34 @@ export function MorphingMedia({
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [isOpen, onClose])
 
+  useEffect(() => {
+    if (!isOverlayActive || !isOpen) return
+    const handleResize = () => {
+      setFloatingRect(getTargetRect())
+    }
+    window.addEventListener("resize", handleResize)
+    return () => {
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [getTargetRect, isOpen, isOverlayActive])
+
+  useLayoutEffect(() => {
+    if (!isOverlayActive) return
+    const nextRect = isOpen ? getTargetRect() : getTriggerRect()
+    if (!nextRect) return
+
+    const rafId = window.requestAnimationFrame(() => {
+      setFloatingRect(nextRect)
+      if (isEnteringOverlay) {
+        setIsEnteringOverlay(false)
+      }
+    })
+
+    return () => {
+      window.cancelAnimationFrame(rafId)
+    }
+  }, [getTargetRect, getTriggerRect, isEnteringOverlay, isOpen, isOverlayActive])
+
   const handleTriggerKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault()
@@ -139,58 +249,35 @@ export function MorphingMedia({
   }
 
   const handleOpen = () => {
-    if (isOpen) return
+    if (isOpen || isOverlayActive) return
     lastActiveRef.current = document.activeElement as HTMLElement
+    setFloatingRect(getTriggerRect() ?? getTargetRect())
+    setIsEnteringOverlay(true)
     setIsOverlayActive(true)
     onOpen()
-  }
-
-  const getFocusableElements = (container: HTMLElement) => {
-    const focusable = container.querySelectorAll<HTMLElement>(
-      'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])'
-    )
-    return Array.from(focusable).filter((el) => !el.hasAttribute("disabled"))
-  }
-
-  const handleModalKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
-    if (event.key !== "Tab") return
-    const container = modalRef.current
-    if (!container) return
-    const focusable = getFocusableElements(container)
-    if (focusable.length === 0) {
-      event.preventDefault()
-      container.focus()
-      return
-    }
-    const first = focusable[0]
-    const last = focusable[focusable.length - 1]
-    const active = document.activeElement as HTMLElement | null
-
-    if (event.shiftKey && active === first) {
-      event.preventDefault()
-      last.focus()
-    } else if (!event.shiftKey && active === last) {
-      event.preventDefault()
-      first.focus()
-    }
   }
 
   const handleClosePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     event.preventDefault()
     event.stopPropagation()
+    if (!isOpen) return
     onClose()
+  }
+
+  const handleMediaAnimationComplete = () => {
+    if (!isOverlayActive || isOpen) return
+    setIsOverlayActive(false)
+    setIsEnteringOverlay(false)
+    setFloatingRect(null)
   }
 
   return (
     <MotionConfig transition={{ duration: 0.3, ease: "easeInOut" }}>
-      <motion.div
-        layoutId={layoutId}
-        layout
-        layoutCrossfade={false}
-        layoutDependency={isOpen}
+      <div
         ref={triggerRef}
+        data-layout-id={layoutId}
         className={cn(
-          "relative overflow-clip transform-gpu outline-none focus-visible:outline-none",
+          "relative overflow-clip outline-none focus-visible:outline-none",
           isOverlayActive && "pointer-events-none",
           isOverlayActive && "z-[80]",
           triggerClassName
@@ -206,63 +293,53 @@ export function MorphingMedia({
         onClick={handleOpen}
         onKeyDown={handleTriggerKeyDown}
       >
-        {children}
-      </motion.div>
+        <motion.div
+          ref={mediaRef}
+          tabIndex={isOverlayActive ? -1 : undefined}
+          role={isOverlayActive ? "dialog" : undefined}
+          aria-modal={isOverlayActive ? "true" : undefined}
+          aria-label={isOverlayActive ? "Media preview" : undefined}
+          className={cn(
+            "stroke overflow-hidden rounded-[var(--radius-card)] outline-none transform-gpu",
+            isOverlayActive
+              ? "fixed z-[80] cursor-zoom-out"
+              : "absolute inset-0 cursor-zoom-in"
+          )}
+          initial={false}
+          animate={
+            isOverlayActive && floatingRect
+              ? {
+                  top: floatingRect.top,
+                  left: floatingRect.left,
+                  width: floatingRect.width,
+                  height: floatingRect.height,
+                }
+              : INLINE_RECT
+          }
+          transition={
+            !isOverlayActive || isEnteringOverlay
+              ? { duration: 0 }
+              : undefined
+          }
+          onAnimationComplete={handleMediaAnimationComplete}
+          onPointerDown={isOverlayActive ? handleClosePointerDown : undefined}
+        >
+          {children}
+        </motion.div>
+      </div>
       {isHydrated && isOverlayActive
         ? createPortal(
-            <div className="fixed inset-0 z-[70]">
-              <AnimatePresence
-                mode="sync"
-                onExitComplete={() => {
-                  if (!isOpen) {
-                    setIsOverlayActive(false)
-                  }
-                }}
-              >
-                {isOpen ? (
-                  <>
-                    <motion.div
-                      className="fixed inset-0 bg-white/95 cursor-zoom-out"
-                      initial={{ opacity: 0 }}
-                      animate={{
-                        opacity: 1,
-                        transition: { duration: 0.34, ease: "easeOut" },
-                      }}
-                      exit={{
-                        opacity: 0,
-                        transition: { duration: 0.22, ease: "easeInOut" },
-                      }}
-                      onPointerDown={handleClosePointerDown}
-                    />
-                    <motion.div
-                      layoutRoot
-                      className="fixed inset-0 flex items-center justify-center p-8 cursor-zoom-out"
-                      onPointerDown={handleClosePointerDown}
-                    >
-                      <motion.div
-                        layoutId={layoutId}
-                        layout
-                        layoutCrossfade={false}
-                        layoutDependency={isOpen}
-                        ref={modalRef}
-                        role="dialog"
-                        aria-modal="true"
-                        aria-label="Media preview"
-                        tabIndex={-1}
-                        className={cn(
-                          "relative overflow-hidden rounded-[var(--radius-card)] outline-none cursor-zoom-out transform-gpu",
-                          expandedClassName
-                        )}
-                        onKeyDown={handleModalKeyDown}
-                        onPointerDown={handleClosePointerDown}
-                      >
-                        {children}
-                      </motion.div>
-                    </motion.div>
-                  </>
-                ) : null}
-              </AnimatePresence>
-            </div>,
+            <motion.div
+              className="fixed inset-0 z-[70] bg-white/95 cursor-zoom-out"
+              initial={{ opacity: 0 }}
+              animate={{
+                opacity: isOpen ? 1 : 0,
+                transition: isOpen
+                  ? { duration: 0.34, ease: "easeOut" }
+                  : { duration: 0.22, ease: "easeInOut" },
+              }}
+              onPointerDown={handleClosePointerDown}
+            />,
             document.body
           )
         : null}

@@ -1,24 +1,21 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { PixelLoadingSpinner } from "./pixel-loading-spinner"
-
-const playbackPositionStore = new Map<string, number>()
 
 interface OptimizedVideoPlayerProps {
   src: string
   shouldAutoplay?: boolean
+  keepMounted?: boolean
   className?: string
-  playbackSyncKey?: string
 }
 
 export function OptimizedVideoPlayer({
   src,
   shouldAutoplay = false,
+  keepMounted = false,
   className,
-  playbackSyncKey,
 }: OptimizedVideoPlayerProps) {
-  const syncKey = playbackSyncKey ?? src
   const containerRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const [hasIntersected, setHasIntersected] = useState(false)
@@ -27,7 +24,12 @@ export function OptimizedVideoPlayer({
   const shouldLoad = shouldAutoplay || hasIntersected
   const isVideoLoaded = loadedSrc === src
   const hasPlaybackIssue = playbackIssueSrc === src
-  const shouldRenderVideo = shouldLoad || isVideoLoaded || hasPlaybackIssue
+
+  const shouldRenderVideo =
+    shouldLoad ||
+    keepMounted ||
+    isVideoLoaded ||
+    hasPlaybackIssue
   const isSafari =
     typeof navigator !== "undefined" &&
     /Safari/i.test(navigator.userAgent) &&
@@ -56,40 +58,11 @@ export function OptimizedVideoPlayer({
     return () => observer.disconnect()
   }, [shouldLoad, shouldRenderVideo])
 
-  const savePlaybackPosition = useCallback(() => {
-    const video = videoRef.current
-    if (!video) return
-    const { currentTime } = video
-    if (!Number.isFinite(currentTime)) return
-    playbackPositionStore.set(syncKey, currentTime)
-  }, [syncKey])
-
-  const restorePlaybackPosition = useCallback(() => {
-    const video = videoRef.current
-    if (!video) return
-    const savedPosition = playbackPositionStore.get(syncKey)
-    if (savedPosition === undefined || !Number.isFinite(savedPosition)) return
-    const duration = video.duration
-    const maxTime =
-      Number.isFinite(duration) && duration > 0
-        ? Math.max(duration - 0.05, 0)
-        : savedPosition
-    const targetTime = Math.min(savedPosition, maxTime)
-    if (Math.abs(video.currentTime - targetTime) < 0.05) return
-    try {
-      video.currentTime = targetTime
-    } catch {
-      // Ignore seek errors before metadata is ready.
-    }
-  }, [syncKey])
-
   useEffect(() => {
     if (!shouldRenderVideo) return
 
     const video = videoRef.current
     if (!video) return
-
-    restorePlaybackPosition()
 
     if (!shouldAutoplay) {
       try {
@@ -97,7 +70,6 @@ export function OptimizedVideoPlayer({
       } catch {
         // Ignore pause errors for unsupported media states.
       }
-      savePlaybackPosition()
       return
     }
 
@@ -107,13 +79,7 @@ export function OptimizedVideoPlayer({
         // Safari may block immediate playback while media state is transitioning.
       })
     }
-  }, [restorePlaybackPosition, savePlaybackPosition, shouldAutoplay, shouldRenderVideo, src])
-
-  useEffect(() => {
-    return () => {
-      savePlaybackPosition()
-    }
-  }, [savePlaybackPosition])
+  }, [shouldAutoplay, shouldRenderVideo, src])
 
   useEffect(() => {
     if (!isSafari || !shouldRenderVideo || isVideoLoaded || hasPlaybackIssue) return
@@ -143,18 +109,9 @@ export function OptimizedVideoPlayer({
     }, 2500)
 
     return () => window.clearTimeout(timeoutId)
-  }, [
-    hasPlaybackIssue,
-    isSafari,
-    isVideoLoaded,
-    restorePlaybackPosition,
-    shouldAutoplay,
-    shouldRenderVideo,
-    src,
-  ])
+  }, [hasPlaybackIssue, isSafari, isVideoLoaded, shouldAutoplay, shouldRenderVideo, src])
 
   const markLoaded = () => {
-    restorePlaybackPosition()
     setLoadedSrc(src)
     setPlaybackIssueSrc(null)
   }
@@ -170,10 +127,6 @@ export function OptimizedVideoPlayer({
   const handleError = () => {
     setPlaybackIssueSrc(src)
     setLoadedSrc(src)
-  }
-
-  const handleTimeUpdate = () => {
-    savePlaybackPosition()
   }
 
   return (
@@ -199,8 +152,6 @@ export function OptimizedVideoPlayer({
           onStalled={handleStall}
           onSuspend={handleStall}
           onError={handleError}
-          onPause={handleTimeUpdate}
-          onTimeUpdate={handleTimeUpdate}
           className="absolute inset-0 h-full w-full object-cover"
           style={{
             opacity: isVideoLoaded ? 1 : 0,
