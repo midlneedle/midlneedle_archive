@@ -8,6 +8,7 @@ export interface CaseArticleMediaInsertion {
   match: string
   label: string
   aspect: string
+  position?: "before" | "after"
 }
 
 interface ParseCaseArticleOptions {
@@ -64,6 +65,23 @@ export function parseCaseArticle(
 
   const withMedia: CaseArticleBlock[] = []
   for (const block of blocks) {
+    if (block.type === "paragraph") {
+      for (const insertion of insertions) {
+        if (insertion.position !== "before") {
+          continue
+        }
+        if (!block.text.includes(insertion.match)) {
+          continue
+        }
+
+        withMedia.push({
+          type: "media",
+          label: insertion.label,
+          aspect: insertion.aspect,
+        })
+      }
+    }
+
     withMedia.push(block)
 
     if (block.type !== "paragraph") {
@@ -71,6 +89,9 @@ export function parseCaseArticle(
     }
 
     for (const insertion of insertions) {
+      if (insertion.position === "before") {
+        continue
+      }
       if (!block.text.includes(insertion.match)) {
         continue
       }

@@ -258,7 +258,7 @@ export function CaseArticle({ title, blocks, footnotes, publishedAt }: CaseArtic
       <div className="mx-auto max-w-2xl">
         <section>
             <header className="flex flex-col">
-              <h2 className="type-title text-foreground">{title}</h2>
+              <h2 className="type-card-title text-foreground">{title}</h2>
               <div className={`type-card-caption ${styles.meta}`}>{publishedAt}</div>
             </header>
 
@@ -270,7 +270,7 @@ export function CaseArticle({ title, blocks, footnotes, publishedAt }: CaseArtic
                     <h2
                       key={`h-${index}`}
                       id={headingId}
-                      className={`type-title text-foreground ${styles.sectionTitle}`}
+                      className={`type-card-title text-foreground ${styles.sectionTitle}`}
                     >
                       {block.text}
                     </h2>

@@ -63,12 +63,6 @@
 .sectionTitle {
   margin-top: var(--article-paragraph-gap);
   margin-bottom: var(--article-title-gap);
-  font-size: 1.2em;
-  line-height: 1.44em;
-  font-weight: 482;
-  font-variation-settings: 'wght' 482, var(--sans-variation);
-  letter-spacing: 0em;
-  word-spacing: -0.04em;
 }
 
 .cardTitle {
