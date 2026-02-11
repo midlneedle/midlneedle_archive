@@ -18,9 +18,29 @@ import { cn } from "@/lib/utils"
 const subscribeHydration = () => () => {}
 const OVERLAY_PADDING = 32
 const MAX_HORIZONTAL_WIDTH_REM = 72
+const MOBILE_MEDIA_QUERY = "(max-width: 767px)"
 
 function useIsHydrated() {
   return useSyncExternalStore(subscribeHydration, () => true, () => false)
+}
+
+function subscribeIsMobile(callback: () => void) {
+  if (typeof window === "undefined") return () => {}
+  const mediaQuery = window.matchMedia(MOBILE_MEDIA_QUERY)
+  const onChange = () => callback()
+  mediaQuery.addEventListener("change", onChange)
+  return () => {
+    mediaQuery.removeEventListener("change", onChange)
+  }
+}
+
+function getIsMobileSnapshot() {
+  if (typeof window === "undefined") return false
+  return window.matchMedia(MOBILE_MEDIA_QUERY).matches
+}
+
+function useIsMobile() {
+  return useSyncExternalStore(subscribeIsMobile, getIsMobileSnapshot, () => false)
 }
 
 type Rect = {
@@ -106,6 +126,7 @@ export function MorphingMedia({
   children,
 }: MorphingMediaProps) {
   const isHydrated = useIsHydrated()
+  const isMobile = useIsMobile()
   const triggerRef = useRef<HTMLDivElement | null>(null)
   const mediaRef = useRef<HTMLDivElement | null>(null)
   const lastActiveRef = useRef<HTMLElement | null>(null)
@@ -242,6 +263,7 @@ export function MorphingMedia({
   }, [getTargetRect, getTriggerRect, isEnteringOverlay, isOpen, isOverlayActive])
 
   const handleTriggerKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (isMobile) return
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault()
       handleOpen()
@@ -249,6 +271,7 @@ export function MorphingMedia({
   }
 
   const handleOpen = () => {
+    if (isMobile) return
     if (isOpen || isOverlayActive) return
     lastActiveRef.current = document.activeElement as HTMLElement
     setFloatingRect(getTriggerRect() ?? getTargetRect())
@@ -271,26 +294,44 @@ export function MorphingMedia({
     setFloatingRect(null)
   }
 
+  const shouldDisableAnimation = isMobile
+  const shouldDisableZoom = isMobile
+
+  useEffect(() => {
+    if (!shouldDisableZoom || !isOpen) return
+    onClose()
+  }, [isOpen, onClose, shouldDisableZoom])
+
   return (
-    <MotionConfig transition={{ duration: 0.3, ease: "easeInOut" }}>
+    <MotionConfig
+      transition={
+        shouldDisableAnimation
+          ? { duration: 0 }
+          : { duration: 0.3, ease: "easeInOut" }
+      }
+    >
       <div
         ref={triggerRef}
-        data-layout-id={layoutId}
         className={cn(
           "relative overflow-clip outline-none focus-visible:outline-none",
           isOverlayActive && "pointer-events-none",
           isOverlayActive && "z-[80]",
+          shouldDisableZoom && "cursor-default",
           triggerClassName
         )}
-        role="button"
-        tabIndex={0}
-        aria-haspopup="dialog"
+        role={shouldDisableZoom ? undefined : "button"}
+        tabIndex={shouldDisableZoom ? -1 : 0}
+        aria-haspopup={shouldDisableZoom ? undefined : "dialog"}
         aria-expanded={isOpen}
-        onPointerDown={(event) => {
-          if (event.button !== 0) return
-          handleOpen()
-        }}
-        onClick={handleOpen}
+        onPointerDown={
+          shouldDisableZoom
+            ? undefined
+            : (event) => {
+                if (event.button !== 0) return
+                handleOpen()
+              }
+        }
+        onClick={shouldDisableZoom ? undefined : handleOpen}
         onKeyDown={handleTriggerKeyDown}
       >
         <motion.div
@@ -317,7 +358,7 @@ export function MorphingMedia({
               : INLINE_RECT
           }
           transition={
-            !isOverlayActive || isEnteringOverlay
+            shouldDisableAnimation || !isOverlayActive || isEnteringOverlay
               ? { duration: 0 }
               : undefined
           }
@@ -334,9 +375,11 @@ export function MorphingMedia({
               initial={{ opacity: 0 }}
               animate={{
                 opacity: isOpen ? 1 : 0,
-                transition: isOpen
-                  ? { duration: 0.34, ease: "easeOut" }
-                  : { duration: 0.22, ease: "easeInOut" },
+                transition: shouldDisableAnimation
+                  ? { duration: 0 }
+                  : isOpen
+                    ? { duration: 0.34, ease: "easeOut" }
+                    : { duration: 0.22, ease: "easeInOut" },
               }}
               onPointerDown={handleClosePointerDown}
             />,
