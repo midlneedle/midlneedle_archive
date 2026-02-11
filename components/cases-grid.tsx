@@ -1,7 +1,3 @@
-"use client"
-
-import Link from 'next/link'
-
 interface CaseItem {
   title: string
   date: string
@@ -25,9 +21,9 @@ function CaseCard({ title, date, href }: CaseItem) {
   )
 
   return href ? (
-    <Link href={href} prefetch={true} className="cases-item group/item block w-full">
+    <a href={href} className="cases-item group/item block w-full">
       {content}
-    </Link>
+    </a>
   ) : (
     <div className="cases-item group/item">
       {content}
