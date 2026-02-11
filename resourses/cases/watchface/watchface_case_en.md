@@ -1,4 +1,4 @@
-**How I made a Pebble watchface and got a retweet from the founder**
+**How I Built a Pebble Watchface That Caught the Founder's Attention**
 
 This is about shipping a small project for a niche device. Everyone starts somewhere, right?
 
