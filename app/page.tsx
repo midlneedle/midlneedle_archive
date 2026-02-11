@@ -19,7 +19,7 @@ const videos = {
 export default function Home() {
   return (
     <MediaProvider>
-      <main className="page-enter min-h-screen bg-background">
+      <main className="min-h-screen bg-background">
           <div className="mx-auto max-w-2xl">
           {/* Hero Section */}
           <section className="mb-[var(--space-section)]">
