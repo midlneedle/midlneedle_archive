@@ -58,6 +58,43 @@
 .meta {
   margin-top: var(--article-meta-gap);
   color: var(--stroke);
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+}
+
+.languageSwitch {
+  display: inline-flex;
+  align-items: center;
+}
+
+.languageSeparator {
+  white-space: pre;
+}
+
+.languageButton {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  opacity: 0.68;
+  cursor: pointer;
+  transition: opacity 0.15s ease, color 0.15s ease;
+  text-decoration: none;
+}
+
+.languageButton:hover {
+  opacity: 1;
+}
+
+.languageButtonActive {
+  color: var(--foreground);
+  opacity: 1;
+  cursor: default;
+  text-decoration-line: underline;
+  text-decoration-color: var(--stroke);
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
 }
 
 .sectionTitle {

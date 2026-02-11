@@ -69,9 +69,12 @@ export function VideoCard({
         >
           <div
             className={cn(
-              "stroke relative h-full w-full overflow-hidden rounded-[var(--radius-card)]"
+              "stroke relative h-full w-full overflow-hidden"
             )}
-            style={{ backgroundColor: blurDataURL || "#000" }}
+            style={{
+              backgroundColor: blurDataURL || "#000",
+              borderRadius: "var(--radius-card)",
+            }}
           >
             <OptimizedVideoPlayer
               src={src}

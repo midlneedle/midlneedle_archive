@@ -341,11 +341,12 @@ export function MorphingMedia({
           aria-modal={isOverlayActive ? "true" : undefined}
           aria-label={isOverlayActive ? "Media preview" : undefined}
           className={cn(
-            "stroke overflow-hidden rounded-[var(--radius-card)] outline-none transform-gpu",
+            "stroke overflow-hidden outline-none transform-gpu",
             isOverlayActive
               ? "fixed z-[80] cursor-zoom-out"
               : "absolute inset-0 cursor-zoom-in"
           )}
+          style={{ borderRadius: "var(--radius-card)" }}
           initial={false}
           animate={
             isOverlayActive && floatingRect

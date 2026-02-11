@@ -11,10 +11,20 @@ import styles from './case-article.module.css'
 import type { CaseArticleBlock } from '@/lib/case-article'
 
 interface CaseArticleProps {
-  title: string
-  blocks: CaseArticleBlock[]
-  footnotes: string[]
-  publishedAt: string
+  content: {
+    eng: {
+      title: string
+      blocks: CaseArticleBlock[]
+      footnotes: string[]
+      publishedAt: string
+    }
+    ru: {
+      title: string
+      blocks: CaseArticleBlock[]
+      footnotes: string[]
+      publishedAt: string
+    }
+  }
 }
 
 interface TocItem {
@@ -135,7 +145,10 @@ function CaseArticleToc({
   )
 }
 
-export function CaseArticle({ title, blocks, footnotes, publishedAt }: CaseArticleProps) {
+export function CaseArticle({ content }: CaseArticleProps) {
+  const [language, setLanguage] = useState<'eng' | 'ru'>('eng')
+  const currentContent = content[language]
+  const { title, blocks, footnotes, publishedAt } = currentContent
   const footnoteCounter = { current: 0 }
   const { items: tocItems, idByBlockIndex } = useMemo(() => {
     const nextItems: TocItem[] = []
@@ -259,7 +272,33 @@ export function CaseArticle({ title, blocks, footnotes, publishedAt }: CaseArtic
         <section>
             <header className="flex flex-col">
               <h2 className="type-card-title text-foreground">{title}</h2>
-              <div className={`type-card-caption ${styles.meta}`}>{publishedAt}</div>
+              <div className={`type-card-caption ${styles.meta}`}>
+                <span className={styles.languageSwitch} aria-label="Article language">
+                  <button
+                    type="button"
+                    className={`${styles.languageButton} ${
+                      language === 'eng' ? styles.languageButtonActive : ''
+                    }`}
+                    onClick={() => setLanguage('eng')}
+                    aria-pressed={language === 'eng'}
+                  >
+                    in english
+                  </button>
+                  <span aria-hidden="true" className={styles.languageSeparator}> / </span>
+                  <button
+                    type="button"
+                    className={`${styles.languageButton} ${
+                      language === 'ru' ? styles.languageButtonActive : ''
+                    }`}
+                    onClick={() => setLanguage('ru')}
+                    aria-pressed={language === 'ru'}
+                  >
+                    на русском
+                  </button>
+                </span>
+                <span aria-hidden="true">·</span>
+                <span>{publishedAt}</span>
+              </div>
             </header>
 
             <article data-article-content className={`mt-[var(--space-text)] ${styles.article}`}>
