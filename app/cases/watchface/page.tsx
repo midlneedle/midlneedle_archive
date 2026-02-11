@@ -54,33 +54,30 @@ const WATCHFACE_MEDIA_INSERTIONS_RU: CaseArticleMediaInsertion[] = [
 
 const WATCHFACE_MEDIA_INSERTIONS_EN: CaseArticleMediaInsertion[] = [
   {
-    match:
-      "This is a story about how I shipped a small product for a pretty niche device – but hey, everyone's gotta start somewhere, right?",
+    match: "This is about shipping a small project for a niche device.",
     label: "Photo · Case cover",
     aspect: "aspect-video",
     position: "after",
   },
   {
     match:
-      "From the start, I had a clear vision: a crisp grid of chunky pixels where the digits themselves would \"glow\" while the rest stayed dim.",
+      "From the start, I had a clear vision: a crisp grid of chunky pixels where the digits light up while everything else stays dark.",
     label: "Photo · First watchface",
     aspect: "aspect-video",
   },
   {
-    match:
-      "I also spent time on the settings page UI. Instead of the bare HTML you usually see in watchface configs, I tried to make it feel more familiar to modern users.",
+    match: "I also spent time on the settings page UI.",
     label: "Photo · Settings screen",
     aspect: "aspect-video",
   },
   {
     match:
-      "The visual design was the easy part: by this point I had a Figma mockup and knew how to use AI to speed up translating design to code.",
+      "The visual design was the easy part. I already had mockups in Figma and knew how to use AI to speed up translating design to code.",
     label: "Photo · General watchface view",
     aspect: "aspect-video",
   },
   {
-    match:
-      "Most of the time was actually spent trying to optimize and polish the animation.",
+    match: "Honestly, most of my time went into tweaking and optimizing this animation.",
     label: "Video · Launch animation",
     aspect: "aspect-video",
   },

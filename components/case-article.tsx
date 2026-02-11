@@ -1,8 +1,6 @@
 'use client'
 
 import {
-  useEffect,
-  useMemo,
   useState,
   type MouseEvent,
   type ReactNode,
@@ -25,24 +23,6 @@ interface CaseArticleProps {
       publishedAt: string
     }
   }
-}
-
-interface TocItem {
-  id: string
-  text: string
-  level: 2 | 3
-}
-
-function toHeadingSlug(value: string) {
-  const normalized = value
-    .toLowerCase()
-    .trim()
-    .replace(/[^\p{L}\p{N}\s-]/gu, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-+|-+$/g, '')
-
-  return normalized || 'section'
 }
 
 function renderInline(
@@ -112,139 +92,11 @@ function renderInline(
   return nodes
 }
 
-function CaseArticleToc({
-  items,
-  activeId,
-  onNavigate,
-}: {
-  items: TocItem[]
-  activeId: string
-  onNavigate: (id: string) => void
-}) {
-  if (items.length === 0) {
-    return null
-  }
-
-  return (
-    <aside className={styles.toc} aria-label="Навигация по статье">
-      <div className={styles.tocList}>
-        {items.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            onClick={() => onNavigate(item.id)}
-            className={`type-card-caption ${styles.tocItem} ${
-              item.level === 3 ? styles.tocItemSublevel : ''
-            } ${activeId === item.id ? styles.tocItemActive : ''}`}
-          >
-            {item.text}
-          </button>
-        ))}
-      </div>
-    </aside>
-  )
-}
-
 export function CaseArticle({ content }: CaseArticleProps) {
   const [language, setLanguage] = useState<'eng' | 'ru'>('eng')
   const currentContent = content[language]
   const { title, blocks, footnotes, publishedAt } = currentContent
   const footnoteCounter = { current: 0 }
-  const { items: tocItems, idByBlockIndex } = useMemo(() => {
-    const nextItems: TocItem[] = []
-    const seen = new Map<string, number>()
-    const indexToId = new Map<number, string>()
-
-    blocks.forEach((block, blockIndex) => {
-      if (block.type !== 'heading' && block.type !== 'subheading') {
-        return
-      }
-
-      const baseId = toHeadingSlug(block.text)
-      const count = (seen.get(baseId) ?? 0) + 1
-      seen.set(baseId, count)
-      const id = count === 1 ? baseId : `${baseId}-${count}`
-      const level = block.type === 'heading' ? 2 : 3
-
-      nextItems.push({
-        id,
-        text: block.text,
-        level,
-      })
-      indexToId.set(blockIndex, id)
-    })
-
-    return { items: nextItems, idByBlockIndex: indexToId }
-  }, [blocks])
-  const [activeTocId, setActiveTocId] = useState(tocItems[0]?.id ?? '')
-  const [isTocVisible, setIsTocVisible] = useState(false)
-
-  useEffect(() => {
-    if (tocItems.length === 0) {
-      return
-    }
-
-    const headingNodes = tocItems
-      .map((item) => document.getElementById(item.id))
-      .filter((node): node is HTMLElement => node !== null)
-
-    if (headingNodes.length === 0) {
-      return
-    }
-
-    const activationViewportRatio = 0.68
-    const revealOffset = 40
-    let ticking = false
-
-    const updateActiveSection = () => {
-      const scrollTop = window.scrollY
-      const viewportHeight = window.innerHeight
-      const activationLine = viewportHeight * activationViewportRatio
-
-      setIsTocVisible(scrollTop > revealOffset)
-
-      let currentId = headingNodes[0].id
-
-      for (const node of headingNodes) {
-        if (node.getBoundingClientRect().top <= activationLine) {
-          currentId = node.id
-        } else {
-          break
-        }
-      }
-
-      setActiveTocId((previousId) => (previousId === currentId ? previousId : currentId))
-    }
-
-    const scheduleUpdate = () => {
-      if (ticking) return
-      ticking = true
-      window.requestAnimationFrame(() => {
-        updateActiveSection()
-        ticking = false
-      })
-    }
-
-    scheduleUpdate()
-    window.addEventListener('scroll', scheduleUpdate, { passive: true })
-    window.addEventListener('resize', scheduleUpdate)
-
-    return () => {
-      window.removeEventListener('scroll', scheduleUpdate)
-      window.removeEventListener('resize', scheduleUpdate)
-    }
-  }, [tocItems])
-
-  const handleTocNavigate = (id: string) => {
-    const target = document.getElementById(id)
-    if (!target) return
-
-    const top = target.getBoundingClientRect().top + window.scrollY - 112
-    window.scrollTo({
-      top,
-      behavior: 'smooth',
-    })
-  }
 
   const handleFootnoteNavigate = (event: MouseEvent<HTMLAnchorElement>) => {
     const href = event.currentTarget.getAttribute('href')
@@ -263,11 +115,6 @@ export function CaseArticle({ content }: CaseArticleProps) {
 
   return (
     <main className="min-h-screen bg-background">
-      {tocItems.length > 0 ? (
-        <div className={`${styles.tocWrap} ${isTocVisible ? styles.tocVisible : ''}`}>
-          <CaseArticleToc items={tocItems} activeId={activeTocId} onNavigate={handleTocNavigate} />
-        </div>
-      ) : null}
       <div className="mx-auto max-w-2xl">
         <section>
             <header className="flex flex-col">
@@ -282,7 +129,7 @@ export function CaseArticle({ content }: CaseArticleProps) {
                     onClick={() => setLanguage('eng')}
                     aria-pressed={language === 'eng'}
                   >
-                    in english
+                    In english
                   </button>
                   <span aria-hidden="true" className={styles.languageSeparator}> / </span>
                   <button
@@ -293,7 +140,7 @@ export function CaseArticle({ content }: CaseArticleProps) {
                     onClick={() => setLanguage('ru')}
                     aria-pressed={language === 'ru'}
                   >
-                    на русском
+                    На русском
                   </button>
                 </span>
                 <span aria-hidden="true">·</span>
@@ -304,11 +151,9 @@ export function CaseArticle({ content }: CaseArticleProps) {
             <article data-article-content className={`mt-[var(--space-text)] ${styles.article}`}>
               {blocks.map((block, index) => {
                 if (block.type === 'heading') {
-                  const headingId = idByBlockIndex.get(index)
                   return (
                     <h2
                       key={`h-${index}`}
-                      id={headingId}
                       className={`type-card-title text-foreground ${styles.sectionTitle}`}
                     >
                       {block.text}
@@ -317,11 +162,9 @@ export function CaseArticle({ content }: CaseArticleProps) {
                 }
 
                 if (block.type === 'subheading') {
-                  const headingId = idByBlockIndex.get(index)
                   return (
                     <h3
                       key={`h3-${index}`}
-                      id={headingId}
                       className={`type-card-title text-foreground ${styles.cardTitle}`}
                     >
                       {block.text}
