@@ -249,7 +249,7 @@ export function CaseArticle({ title, blocks, footnotes, publishedAt }: CaseArtic
   }
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="page-enter min-h-screen bg-background">
       {tocItems.length > 0 ? (
         <div className={`${styles.tocWrap} ${isTocVisible ? styles.tocVisible : ''}`}>
           <CaseArticleToc items={tocItems} activeId={activeTocId} onNavigate={handleTocNavigate} />
