@@ -10,10 +10,14 @@ interface CasesGridProps {
 
 function CaseCard({ title, date, href }: CaseItem) {
   const content = (
-    <div className="flex w-full items-baseline justify-between py-[calc(var(--space-text)*0.4)]">
+    <div className="flex w-full items-center gap-[calc(var(--space-text)*0.5)] py-[calc(var(--space-text)*0.4)]">
       <span className="cases-item-title type-card-title text-foreground transition-colors duration-200">
         {title}
       </span>
+      <span
+        aria-hidden="true"
+        className="h-px flex-1 bg-[var(--stroke)]"
+      />
       <span className="type-card-title text-muted-foreground transition-colors duration-200 group-hover/item:text-foreground">
         {date}
       </span>

@@ -1,10 +1,13 @@
-// Преобладающие цвета из первых кадров видео (используются как фон во время загрузки)
+// Единый цветовой placeholder для видео во время загрузки:
+// #353b42 с непрозрачностью 5%
+const VIDEO_PLACEHOLDER_COLOR = "rgba(53, 59, 66, 0.05)"
+
 export const videoPlaceholders = {
-  cummera: "rgba(36, 33, 28, 0.1)",
-  film_segment: "rgba(125, 115, 114, 0.1)",
-  fofocus: "rgba(183, 170, 180, 0.1)",
-  lumon_trimmmed: "rgba(102, 77, 83, 0.1)",
-  wheeel: "rgba(97, 88, 89, 0.1)",
-  winxp: "rgba(96, 100, 103, 0.1)",
-  xmbb: "rgba(106, 105, 137, 0.1)",
+  cummera: VIDEO_PLACEHOLDER_COLOR,
+  film_segment: VIDEO_PLACEHOLDER_COLOR,
+  fofocus: VIDEO_PLACEHOLDER_COLOR,
+  lumon_trimmmed: VIDEO_PLACEHOLDER_COLOR,
+  wheeel: VIDEO_PLACEHOLDER_COLOR,
+  winxp: VIDEO_PLACEHOLDER_COLOR,
+  xmbb: VIDEO_PLACEHOLDER_COLOR,
 } as const
