@@ -16,11 +16,7 @@ YouTube's algorithm recently served me a video from [Eric Migicovsky](https://en
 
 That whole comeback energy and the excitement in the community got me wanting to build something for the platform. I'd also been meaning to try vibe coding.
 
-From the start, I had a clear picture in my head: a clean grid of chunky pixels where the digits light up and everything else stays dark.
-
-My first watchface came out exactly like that – pretty basic, but it was what I was going for. Then I got curious about patterns and animations and made a few more.
-
-With each project, I got a better feel for the workflow – figured out my stack, learned how to work with the emulator efficiently, and finally got comfortable with GitHub. With all that behind me, I took on my latest watchface.
+While figuring out how everything worked, I ended up making a few watchfaces. With each one, I got a better feel for the workflow – figured out my stack, got comfortable with the emulator, and finally started using GitHub properly. With all that behind me, I took on my latest watchface.
 
 **Details**
 

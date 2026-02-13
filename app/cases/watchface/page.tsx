@@ -37,7 +37,7 @@ const WATCHFACE_MEDIA_INSERTIONS_RU: CaseArticleMediaInsertion[] = [
   },
   {
     match:
-      "Мой первый вотчфейс получился именно таким – да, выглядит простенько, но он полностью соответствовал поставленной задаче. Потом мне стало интересно поэкспериментировать с паттернами и анимациями и я сделал ещё несколько.",
+      "С этими знаниями я подошёл к созданию своего последнего, на момент написания статьи, вотчфейса.",
     label: "Видео · Первый вотчфейс",
     aspect: "aspect-video",
   },
@@ -56,6 +56,12 @@ const WATCHFACE_MEDIA_INSERTIONS_RU: CaseArticleMediaInsertion[] = [
     label: "Видео · Анимация запуска",
     aspect: "aspect-video",
   },
+  {
+    match:
+      "В целом реакция была положительной и я подумал почему бы не запостить про это в Twitter – перед сном решил набросать небольшое сообщение, отметил аккаунт Эрика Магиковски и нажал на кнопку “Post”.",
+    label: "Фото · Пост в Twitter",
+    aspect: "aspect-video",
+  },
 ]
 
 const WATCHFACE_MEDIA_INSERTIONS_EN: CaseArticleMediaInsertion[] = [
@@ -67,30 +73,30 @@ const WATCHFACE_MEDIA_INSERTIONS_EN: CaseArticleMediaInsertion[] = [
   },
   {
     match:
-      "From the start, I had a clear vision: a crisp grid of chunky pixels where the digits light up while everything else stays dark.",
-    label: "Photo · First watchface",
-    aspect: "aspect-video",
-  },
-  {
-    match:
-      "My first watchface turned out exactly like that. Pretty basic, but it matched what I was going for. Then I got curious and started experimenting with different patterns and animations, made a few more.",
+      "With all that behind me, I took on my latest watchface.",
     label: "Video · First watchface",
     aspect: "aspect-video",
   },
   {
-    match: "I also spent time on the settings page UI.",
+    match: "I also put some work into the settings page itself.",
     label: "Photo · Settings screen",
     aspect: "aspect-video",
   },
   {
     match:
-      "The visual design was the easy part. I already had mockups in Figma and knew how to use AI to speed up translating design to code.",
+      "The visual design was the easy part – I already had a mockup in Figma and knew how to use AI to speed up getting from design to code.",
     label: "Photo · General watchface view",
     aspect: "aspect-video",
   },
   {
-    match: "Honestly, most of my time went into tweaking and optimizing this animation.",
+    match: "worth noting that most of my time went into optimizing and polishing this animation.",
     label: "Video · Launch animation",
+    aspect: "aspect-video",
+  },
+  {
+    match:
+      "The response was positive, so I figured why not tweet about it. Right before bed, I put together a quick post, tagged Eric Migicovsky, and hit publish.",
+    label: "Photo · Twitter post",
     aspect: "aspect-video",
   },
 ]
