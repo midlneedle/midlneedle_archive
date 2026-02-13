@@ -13,6 +13,7 @@ const videos = {
   xmbb: withBasePath("/videos/xmbb.mp4"),
   lumon: withBasePath("/videos/lumon_trimmmed.mp4"),
   cummera: withBasePath("/videos/cummera.mp4"),
+  wiki25: withBasePath("/videos/wiki25.mp4"),
   winxp: withBasePath("/videos/winxp.mp4"),
 }
 
@@ -101,12 +102,12 @@ export default function Home() {
                   blurDataURL={videoPlaceholders.winxp}
                 />
                 <VideoCard
-                  src={videos.film_segment}
-                  title="Film Segment"
-                  description="Cinematic UI transitions"
+                  src={videos.wiki25}
+                  title="Wiki 25"
+                  description="Experimental interface concept"
                   orientation="vertical"
                   showTitle={true}
-                  blurDataURL={videoPlaceholders.film_segment}
+                  blurDataURL={videoPlaceholders.wiki25}
                 />
               </div>
 

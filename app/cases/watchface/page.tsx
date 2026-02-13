@@ -36,6 +36,12 @@ const WATCHFACE_MEDIA_INSERTIONS_RU: CaseArticleMediaInsertion[] = [
     aspect: "aspect-video",
   },
   {
+    match:
+      "Мой первый вотчфейс получился именно таким – да, выглядит простенько, но он полностью соответствовал поставленной задаче. Потом мне стало интересно поэкспериментировать с паттернами и анимациями и я сделал ещё несколько.",
+    label: "Видео · Первый вотчфейс",
+    aspect: "aspect-video",
+  },
+  {
     match: "я постарался привести все к более привычному современному пользователю интерфейсу",
     label: "Фото · Экран настроек",
     aspect: "aspect-video",
@@ -63,6 +69,12 @@ const WATCHFACE_MEDIA_INSERTIONS_EN: CaseArticleMediaInsertion[] = [
     match:
       "From the start, I had a clear vision: a crisp grid of chunky pixels where the digits light up while everything else stays dark.",
     label: "Photo · First watchface",
+    aspect: "aspect-video",
+  },
+  {
+    match:
+      "My first watchface turned out exactly like that. Pretty basic, but it matched what I was going for. Then I got curious and started experimenting with different patterns and animations, made a few more.",
+    label: "Video · First watchface",
     aspect: "aspect-video",
   },
   {

@@ -7,6 +7,7 @@ export const videoPlaceholders = {
   film_segment: VIDEO_PLACEHOLDER_COLOR,
   fofocus: VIDEO_PLACEHOLDER_COLOR,
   lumon_trimmmed: VIDEO_PLACEHOLDER_COLOR,
+  wiki25: VIDEO_PLACEHOLDER_COLOR,
   wheeel: VIDEO_PLACEHOLDER_COLOR,
   winxp: VIDEO_PLACEHOLDER_COLOR,
   xmbb: VIDEO_PLACEHOLDER_COLOR,
