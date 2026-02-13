@@ -151,6 +151,7 @@
   counter-increment: list;
   text-align: left;
   transition: color 0.2s ease;
+  cursor: pointer;
 }
 
 .footnoteItem:hover {

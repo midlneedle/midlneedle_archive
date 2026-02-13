@@ -25,27 +25,18 @@ interface CaseArticleProps {
   }
 }
 
-function isHttpUrl(value: string) {
-  try {
-    const parsed = new URL(value)
-    return parsed.protocol === 'http:' || parsed.protocol === 'https:'
-  } catch {
-    return false
-  }
-}
-
 function findNextInlineToken(text: string, from: number) {
-  const indices = [
-    text.indexOf('**', from),
-    text.indexOf('[', from),
-    text.indexOf('<', from),
-  ].filter((index) => index >= 0)
+  const nextBold = text.indexOf('**', from)
+  const nextLink = text.indexOf('[', from)
 
-  if (indices.length === 0) {
+  if (nextBold === -1 && nextLink === -1) {
     return -1
   }
 
-  return Math.min(...indices)
+  if (nextBold === -1) return nextLink
+  if (nextLink === -1) return nextBold
+
+  return Math.min(nextBold, nextLink)
 }
 
 function parseInlineSegment(segment: string, keyPrefix: string) {
@@ -83,7 +74,7 @@ function parseInlineSegment(segment: string, keyPrefix: string) {
           const label = segment.slice(cursor + 1, labelEnd).trim()
           const href = segment.slice(labelEnd + 2, linkEnd - 1).trim()
 
-          if (label && isHttpUrl(href)) {
+          if (label && href) {
             nodes.push(
               <a
                 key={`${keyPrefix}-l-${cursor}`}
@@ -98,29 +89,6 @@ function parseInlineSegment(segment: string, keyPrefix: string) {
             cursor = linkEnd
             continue
           }
-        }
-      }
-    }
-
-    if (segment[cursor] === '<') {
-      const linkEnd = segment.indexOf('>', cursor + 1)
-      if (linkEnd > cursor + 1) {
-        const href = segment.slice(cursor + 1, linkEnd).trim()
-
-        if (isHttpUrl(href)) {
-          nodes.push(
-            <a
-              key={`${keyPrefix}-u-${cursor}`}
-              href={href}
-              target="_blank"
-              rel="noreferrer"
-              className={styles.inlineLink}
-            >
-              {href}
-            </a>
-          )
-          cursor = linkEnd + 1
-          continue
         }
       }
     }
@@ -197,19 +165,35 @@ export function CaseArticle({ content }: CaseArticleProps) {
   const { title, blocks, footnotes, publishedAt } = currentContent
   const footnoteCounter = { current: 0 }
 
-  const handleFootnoteNavigate = (event: MouseEvent<HTMLAnchorElement>) => {
-    const href = event.currentTarget.getAttribute('href')
-    if (!href?.startsWith('#')) return
+  const navigateToHash = (hash: string) => {
+    const target = document.querySelector<HTMLElement>(hash)
+    if (!target) return false
 
-    const target = document.querySelector<HTMLElement>(href)
-    if (!target) return
-
-    event.preventDefault()
     target.scrollIntoView({
       behavior: 'smooth',
       block: 'start',
     })
-    window.history.pushState(null, '', href)
+    window.history.pushState(null, '', hash)
+    return true
+  }
+
+  const handleFootnoteNavigate = (event: MouseEvent<HTMLAnchorElement>) => {
+    const href = event.currentTarget.getAttribute('href')
+    if (!href?.startsWith('#')) return
+
+    if (!navigateToHash(href)) return
+
+    event.preventDefault()
+  }
+
+  const handleFootnoteItemClick = (
+    event: MouseEvent<HTMLLIElement>,
+    index: number
+  ) => {
+    const target = event.target
+    if (target instanceof Element && target.closest('a[href]')) return
+
+    navigateToHash(`#fnref-${index + 1}`)
   }
 
   return (
@@ -300,6 +284,7 @@ export function CaseArticle({ content }: CaseArticleProps) {
                       id={`fn-${index + 1}`}
                       data-index={index + 1}
                       data-prose-type="text"
+                      onClick={(event) => handleFootnoteItemClick(event, index)}
                     >
                       {renderInline(note, { current: 0 }, handleFootnoteNavigate)}
                     </li>
