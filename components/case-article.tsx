@@ -25,6 +25,119 @@ interface CaseArticleProps {
   }
 }
 
+function isHttpUrl(value: string) {
+  try {
+    const parsed = new URL(value)
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:'
+  } catch {
+    return false
+  }
+}
+
+function findNextInlineToken(text: string, from: number) {
+  const indices = [
+    text.indexOf('**', from),
+    text.indexOf('[', from),
+    text.indexOf('<', from),
+  ].filter((index) => index >= 0)
+
+  if (indices.length === 0) {
+    return -1
+  }
+
+  return Math.min(...indices)
+}
+
+function parseInlineSegment(segment: string, keyPrefix: string) {
+  const nodes: ReactNode[] = []
+  let cursor = 0
+
+  while (cursor < segment.length) {
+    if (segment.startsWith('**', cursor)) {
+      const boldEnd = segment.indexOf('**', cursor + 2)
+      if (boldEnd > cursor + 2) {
+        nodes.push(
+          <strong key={`${keyPrefix}-b-${cursor}`}>
+            {segment.slice(cursor + 2, boldEnd)}
+          </strong>
+        )
+        cursor = boldEnd + 2
+        continue
+      }
+    }
+
+    if (segment[cursor] === '[') {
+      const labelEnd = segment.indexOf(']', cursor + 1)
+      if (labelEnd > cursor + 1 && segment[labelEnd + 1] === '(') {
+        let linkEnd = labelEnd + 2
+        let nestedDepth = 1
+
+        while (linkEnd < segment.length && nestedDepth > 0) {
+          const char = segment[linkEnd]
+          if (char === '(') nestedDepth += 1
+          if (char === ')') nestedDepth -= 1
+          linkEnd += 1
+        }
+
+        if (nestedDepth === 0) {
+          const label = segment.slice(cursor + 1, labelEnd).trim()
+          const href = segment.slice(labelEnd + 2, linkEnd - 1).trim()
+
+          if (label && isHttpUrl(href)) {
+            nodes.push(
+              <a
+                key={`${keyPrefix}-l-${cursor}`}
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                className={styles.inlineLink}
+              >
+                {label}
+              </a>
+            )
+            cursor = linkEnd
+            continue
+          }
+        }
+      }
+    }
+
+    if (segment[cursor] === '<') {
+      const linkEnd = segment.indexOf('>', cursor + 1)
+      if (linkEnd > cursor + 1) {
+        const href = segment.slice(cursor + 1, linkEnd).trim()
+
+        if (isHttpUrl(href)) {
+          nodes.push(
+            <a
+              key={`${keyPrefix}-u-${cursor}`}
+              href={href}
+              target="_blank"
+              rel="noreferrer"
+              className={styles.inlineLink}
+            >
+              {href}
+            </a>
+          )
+          cursor = linkEnd + 1
+          continue
+        }
+      }
+    }
+
+    const nextToken = findNextInlineToken(segment, cursor + 1)
+    if (nextToken === -1) {
+      nodes.push(segment.slice(cursor))
+      break
+    }
+
+    nodes.push(segment.slice(cursor, nextToken))
+    cursor = nextToken
+  }
+
+  return nodes
+}
+
 function renderInline(
   text: string,
   footnoteCounter: { current: number },
@@ -72,21 +185,7 @@ function renderInline(
       continue
     }
 
-    const boldRegex = /\*\*(.+?)\*\*/g
-    let lastIndex = 0
-    let match: RegExpExecArray | null
-
-    while ((match = boldRegex.exec(segment))) {
-      if (match.index > lastIndex) {
-        nodes.push(segment.slice(lastIndex, match.index))
-      }
-      nodes.push(<strong key={`b-${match.index}-${nodes.length}`}>{match[1]}</strong>)
-      lastIndex = match.index + match[0].length
-    }
-
-    if (lastIndex < segment.length) {
-      nodes.push(segment.slice(lastIndex))
-    }
+    nodes.push(...parseInlineSegment(segment, `seg-${i}-${nodes.length}`))
   }
 
   return nodes
@@ -203,15 +302,6 @@ export function CaseArticle({ content }: CaseArticleProps) {
                       data-prose-type="text"
                     >
                       {renderInline(note, { current: 0 }, handleFootnoteNavigate)}
-                      <a
-                        href={`#fnref-${index + 1}`}
-                        data-footnote-backref
-                        className={styles.footnoteBackref}
-                        aria-label={`Назад к упоминанию сноски ${index + 1}`}
-                        onClick={handleFootnoteNavigate}
-                      >
-                        ↩
-                      </a>
                     </li>
                   ))}
                 </ol>

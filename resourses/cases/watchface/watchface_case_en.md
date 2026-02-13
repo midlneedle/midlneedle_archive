@@ -4,15 +4,15 @@ This is about shipping a small project for a niche device. Everyone starts somew
 
 **Why Pebble**
 
-Pebble always felt different to me. E-paper screen instead of bright OLED, battery that lasts a week instead of dying every night. A product that real people funded on Kickstarter, not something rolled out by a massive tech company.
+[Pebble](https://en.wikipedia.org/wiki/Pebble_(watch)) always felt different to me. E-paper screen instead of bright OLED, battery that lasts a week instead of dying every night. A product that real people funded on Kickstarter, not something rolled out by a massive tech company.
 
-When I saw a Pebble Time on my local marketplace, I bought it immediately. No hesitation.
+When I saw a [Pebble Time](https://en.wikipedia.org/wiki/Pebble_Time) on my local marketplace, I bought it immediately. No hesitation.
 
 I've been wearing it for about eight years now. During that time, the company went bankrupt and changed hands a few times, but turns out that wasn't the end of the story.
 
 **How I started making watchfaces**
 
-YouTube's algorithm recently threw me a video from Eric Migicovsky – Pebble's founder. Turns out he's reviving the company and releasing a new model, nine years after the last one.
+YouTube's algorithm recently threw me a video from [Eric Migicovsky](https://en.wikipedia.org/wiki/Eric_Migicovsky) – Pebble's founder. Turns out he's reviving the company and releasing a new model, nine years after the last one.
 
 The whole revival story and the energy in the community got me interested in building something for the platform. I'd also been wanting to try vibe coding anyway.
 
@@ -52,8 +52,8 @@ Woke up the next morning and the tweet had blown up – pretty wild for an accou
 
 I'm thinking about implementing a few more watchfaces from my Figma backlog. I also have an idea for a watchface configurator template built with Astro, so anyone could quickly build a clean settings interface.
 
-\*This was possible because they open-sourced the system earlier this year, so I could dig into the actual vibration pattern code.
+\*This was possible because they [open-sourced the system](https://github.com/google/pebble) earlier this year, so I could dig into the actual vibration pattern code.
 
-\* I'll admit, I borrowed the watchface name – General Magic – from a now-defunct company that tried to create what later became smartphones back in the early 1990s. It was started by ex-Apple people – Andy Hertzfeld, Bill Atkinson, Joanna Hoffman, and Susan Kare. Felt like a nice reference to an interesting piece of tech history. There's a good documentary about them if you're interested.
+\* I'll admit, I borrowed the watchface name – General Magic – from a now-defunct company that tried to create what later became smartphones back in the early 1990s. It was started by ex-Apple people – Andy Hertzfeld, Bill Atkinson, Joanna Hoffman, and Susan Kare. Felt like a nice reference to an interesting piece of tech history. [There's a good documentary about them](https://www.youtube.com/watch?v=uTdyb-RWNKo) if you're interested.
 
-\*One bug did slip through – on the older 2014 models, the animation played much slower than intended. A user reached out about it on GitHub. I had to simplify it for the Classic models since their specs were way weaker than Pebble Time and couldn't handle the full animation.
+\*One bug did slip through – on the older 2014 models, the animation played much slower than intended. A user reached out about it on [GitHub](https://github.com/midlneedle/General_Magic_pebble_watchface/issues/1). I had to simplify it for the Classic models since their specs were way weaker than Pebble Time and couldn't handle the full animation.

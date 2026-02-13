@@ -64,6 +64,18 @@
   margin: 0;
 }
 
+.inlineLink {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+  text-decoration-color: var(--stroke);
+}
+
+.inlineLink:hover {
+  text-decoration-color: var(--foreground);
+}
+
 .paragraph + .paragraph {
   margin-top: var(--article-inner-gap);
 }
@@ -153,11 +165,4 @@
   font-size: inherit;
   line-height: inherit;
   font-variation-settings: inherit;
-}
-
-.footnoteBackref {
-  position: absolute;
-  inset: 0;
-  bottom: 8px;
-  text-indent: -9999px;
 }
