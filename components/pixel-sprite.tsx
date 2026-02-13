@@ -61,6 +61,7 @@ export function PixelSprite({
     "--pixel-mid": tones.mid,
     "--pixel-light": tones.light,
     "--pixel-faint": tones.faint,
+    overflow: "visible",
     ...style,
   } as CSSProperties
 
